@@ -8,25 +8,20 @@ import {
 type ProductsState = {
   // data
   products: Product[];
-  selectedProductId: string | null;
 
   // ui/state
   isLoading: boolean;
   errorMessage: string | null;
 
   // actions
-  setSelectedProductId: (id: string | null) => void;
   fetchProducts: () => Promise<void>;
 };
 
 export const useProductsStore = create<ProductsState>()((set) => ({
   products: [],
-  selectedProductId: null,
 
   isLoading: false,
   errorMessage: null,
-
-  setSelectedProductId: (id) => set({ selectedProductId: id }),
 
   fetchProducts: async () => {
     set({ isLoading: true, errorMessage: null });
