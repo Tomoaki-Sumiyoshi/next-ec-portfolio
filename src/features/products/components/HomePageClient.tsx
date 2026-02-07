@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 
 import { useProductsStore } from '@/features/products/store/useProductsStore';
 
@@ -17,7 +17,9 @@ export default function HomePageClient() {
   return (
     <>
       <ProductsView />
-      <ProductDetailModal />
+      <Suspense fallback={null}>
+        <ProductDetailModal />
+      </Suspense>
     </>
   );
 }
