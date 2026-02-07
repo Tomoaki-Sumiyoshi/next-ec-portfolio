@@ -1,86 +1,231 @@
 [
   {
     "id": "p_001",
+    "kind": "stocked",
     "name": "シンプルTシャツ",
     "price": 1980,
     "imageUrl": "https://placehold.co/600x600?text=T-Shirt",
-    "description": "着回ししやすい定番のコットンTシャツ。"
+    "description": "着回ししやすい定番のコットンTシャツ。",
+    "stock": 24
   },
   {
     "id": "p_002",
+    "kind": "stocked",
     "name": "デニムジャケット",
     "price": 5980,
     "imageUrl": "https://placehold.co/600x600?text=Denim+Jacket",
-    "description": "季節を問わず使えるベーシックデニム。"
+    "description": "季節を問わず使えるベーシックデニム。",
+    "stock": 12
   },
   {
     "id": "p_003",
+    "kind": "stocked",
     "name": "スニーカー",
     "price": 4980,
     "imageUrl": "https://placehold.co/600x600?text=Sneakers",
-    "description": "軽量で歩きやすいカジュアルスニーカー。"
+    "description": "軽量で歩きやすいカジュアルスニーカー。",
+    "stock": 30
   },
   {
     "id": "p_004",
+    "kind": "stocked",
     "name": "キャンバストート",
     "price": 2480,
     "imageUrl": "https://placehold.co/600x600?text=Tote+Bag",
-    "description": "日常使いに便利な大容量トートバッグ。"
+    "description": "日常使いに便利な大容量トートバッグ。",
+    "stock": 18
   },
   {
     "id": "p_005",
+    "kind": "stocked",
     "name": "レザーベルト",
     "price": 2980,
     "imageUrl": "https://placehold.co/600x600?text=Leather+Belt",
-    "description": "シンプルで上品な本革ベルト。"
+    "description": "シンプルで上品な本革ベルト。",
+    "stock": 0
   },
   {
     "id": "p_006",
+    "kind": "stocked",
     "name": "腕時計",
     "price": 8980,
     "imageUrl": "https://placehold.co/600x600?text=Watch",
-    "description": "ミニマルデザインのクォーツ腕時計。"
+    "description": "ミニマルデザインのクォーツ腕時計。",
+    "stock": 7
   },
   {
     "id": "p_007",
+    "kind": "stocked",
     "name": "パーカー",
     "price": 3980,
     "imageUrl": "https://placehold.co/600x600?text=Hoodie",
-    "description": "柔らかな裏起毛素材のフーディー。"
+    "description": "柔らかな裏起毛素材のフーディー。",
+    "stock": 16
   },
   {
     "id": "p_008",
+    "kind": "stocked",
     "name": "キャップ",
     "price": 1680,
     "imageUrl": "https://placehold.co/600x600?text=Cap",
-    "description": "シンプルロゴ入りベースボールキャップ。"
+    "description": "シンプルロゴ入りベースボールキャップ。",
+    "stock": 25
   },
   {
     "id": "p_009",
+    "kind": "stocked",
     "name": "サングラス",
     "price": 2580,
     "imageUrl": "https://placehold.co/600x600?text=Sunglasses",
-    "description": "UVカット対応の軽量サングラス。"
+    "description": "UVカット対応の軽量サングラス。",
+    "stock": 14
   },
   {
     "id": "p_010",
+    "kind": "stocked",
     "name": "バックパック",
     "price": 5480,
     "imageUrl": "https://placehold.co/600x600?text=Backpack",
-    "description": "通勤通学に使える多機能リュック。"
+    "description": "通勤通学に使える多機能リュック。",
+    "stock": 9
   },
   {
     "id": "p_011",
+    "kind": "stocked",
     "name": "ニットセーター",
     "price": 4280,
     "imageUrl": "https://placehold.co/600x600?text=Knit",
-    "description": "暖かく柔らかな着心地のニット。"
+    "description": "暖かく柔らかな着心地のニット。",
+    "stock": 11
   },
   {
     "id": "p_012",
+    "kind": "stocked",
     "name": "スラックス",
     "price": 4680,
     "imageUrl": "https://placehold.co/600x600?text=Slacks",
-    "description": "きれいめスタイルに合う定番パンツ。"
+    "description": "きれいめスタイルに合う定番パンツ。",
+    "stock": 20
+  },
+
+  {
+    "id": "p_101",
+    "kind": "license",
+    "name": "UIテンプレート買い切りライセンス",
+    "price": 9800,
+    "imageUrl": "https://placehold.co/600x600?text=UI+License",
+    "description": "商用利用可能なUIテンプレートの買い切りライセンス。",
+    "maxPerUser": 1,
+    "stock": null
+  },
+  {
+    "id": "p_102",
+    "kind": "license",
+    "name": "アイコンセットライセンス",
+    "price": 4800,
+    "imageUrl": "https://placehold.co/600x600?text=Icon+License",
+    "description": "高品質アイコン素材の無期限利用ライセンス。",
+    "maxPerUser": 1,
+    "stock": null
+  },
+  {
+    "id": "p_103",
+    "kind": "license",
+    "name": "写真素材パック",
+    "price": 6800,
+    "imageUrl": "https://placehold.co/600x600?text=Photo+Pack",
+    "description": "Web制作向け写真素材の買い切りパック。",
+    "maxPerUser": 1,
+    "stock": null
+  },
+  {
+    "id": "p_104",
+    "kind": "license",
+    "name": "フォントライセンス",
+    "price": 7200,
+    "imageUrl": "https://placehold.co/600x600?text=Font+License",
+    "description": "日本語対応フォントの商用ライセンス。",
+    "maxPerUser": 1,
+    "stock": null
+  },
+  {
+    "id": "p_105",
+    "kind": "license",
+    "name": "Reactコンポーネント集",
+    "price": 12800,
+    "imageUrl": "https://placehold.co/600x600?text=React+Kit",
+    "description": "再利用可能なReact UIコンポーネント集。",
+    "maxPerUser": 1,
+    "stock": null
+  },
+  {
+    "id": "p_106",
+    "kind": "license",
+    "name": "管理画面テンプレート",
+    "price": 15800,
+    "imageUrl": "https://placehold.co/600x600?text=Admin+Template",
+    "description": "ダッシュボードUIの完成テンプレート。",
+    "maxPerUser": 1,
+    "stock": null
+  },
+  {
+    "id": "p_107",
+    "kind": "license",
+    "name": "イラスト素材集",
+    "price": 5400,
+    "imageUrl": "https://placehold.co/600x600?text=Illustration",
+    "description": "Webや資料に使えるイラストパック。",
+    "maxPerUser": 1,
+    "stock": null
+  },
+  {
+    "id": "p_108",
+    "kind": "license",
+    "name": "サウンド素材パック",
+    "price": 3600,
+    "imageUrl": "https://placehold.co/600x600?text=Sound+Pack",
+    "description": "UI効果音を収録した素材セット。",
+    "maxPerUser": 1,
+    "stock": null
+  },
+  {
+    "id": "p_109",
+    "kind": "license",
+    "name": "動画テンプレート",
+    "price": 11200,
+    "imageUrl": "https://placehold.co/600x600?text=Video+Template",
+    "description": "プロモーション動画用テンプレート。",
+    "maxPerUser": 1,
+    "stock": null
+  },
+  {
+    "id": "p_110",
+    "kind": "license",
+    "name": "3Dモデル素材集",
+    "price": 13400,
+    "imageUrl": "https://placehold.co/600x600?text=3D+Assets",
+    "description": "WebGL向け3Dアセットパック。",
+    "maxPerUser": 1,
+    "stock": null
+  },
+  {
+    "id": "p_111",
+    "kind": "license",
+    "name": "配色テーマセット",
+    "price": 2200,
+    "imageUrl": "https://placehold.co/600x600?text=Color+Themes",
+    "description": "UIデザイン用カラーテーマ集。",
+    "maxPerUser": 1,
+    "stock": null
+  },
+  {
+    "id": "p_112",
+    "kind": "license",
+    "name": "アニメーションプリセット",
+    "price": 4200,
+    "imageUrl": "https://placehold.co/600x600?text=Animation+Pack",
+    "description": "Web用モーションプリセット集。",
+    "maxPerUser": 1,
+    "stock": null
   }
 ]
