@@ -1,14 +1,8 @@
 'use client';
 
-import {
-  ActionIcon,
-  Anchor,
-  AppShellHeader,
-  Burger,
-  Group,
-  Image,
-} from '@mantine/core';
-import { IconShoppingCart } from '@tabler/icons-react';
+import { Anchor, AppShellHeader, Burger, Group, Image } from '@mantine/core';
+
+import CartIcon from './CartIcon';
 
 type Props = {
   opened: boolean;
@@ -40,15 +34,7 @@ export default function ShopHeader({ opened, onToggle }: Props) {
         </Group>
 
         {/* Right: cart */}
-        <ActionIcon
-          component="a"
-          href="/cart"
-          variant="subtle"
-          aria-label="cart"
-          size="lg"
-        >
-          <IconShoppingCart size={20} />
-        </ActionIcon>
+        <CartIcon count={1} />
       </Group>
     </AppShellHeader>
   );
