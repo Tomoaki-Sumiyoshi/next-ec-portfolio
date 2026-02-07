@@ -1,0 +1,86 @@
+[
+  {
+    "id": "p_001",
+    "name": "シンプルTシャツ",
+    "price": 1980,
+    "imageUrl": "https://placehold.co/600x600?text=T-Shirt",
+    "description": "着回ししやすい定番のコットンTシャツ。"
+  },
+  {
+    "id": "p_002",
+    "name": "デニムジャケット",
+    "price": 5980,
+    "imageUrl": "https://placehold.co/600x600?text=Denim+Jacket",
+    "description": "季節を問わず使えるベーシックデニム。"
+  },
+  {
+    "id": "p_003",
+    "name": "スニーカー",
+    "price": 4980,
+    "imageUrl": "https://placehold.co/600x600?text=Sneakers",
+    "description": "軽量で歩きやすいカジュアルスニーカー。"
+  },
+  {
+    "id": "p_004",
+    "name": "キャンバストート",
+    "price": 2480,
+    "imageUrl": "https://placehold.co/600x600?text=Tote+Bag",
+    "description": "日常使いに便利な大容量トートバッグ。"
+  },
+  {
+    "id": "p_005",
+    "name": "レザーベルト",
+    "price": 2980,
+    "imageUrl": "https://placehold.co/600x600?text=Leather+Belt",
+    "description": "シンプルで上品な本革ベルト。"
+  },
+  {
+    "id": "p_006",
+    "name": "腕時計",
+    "price": 8980,
+    "imageUrl": "https://placehold.co/600x600?text=Watch",
+    "description": "ミニマルデザインのクォーツ腕時計。"
+  },
+  {
+    "id": "p_007",
+    "name": "パーカー",
+    "price": 3980,
+    "imageUrl": "https://placehold.co/600x600?text=Hoodie",
+    "description": "柔らかな裏起毛素材のフーディー。"
+  },
+  {
+    "id": "p_008",
+    "name": "キャップ",
+    "price": 1680,
+    "imageUrl": "https://placehold.co/600x600?text=Cap",
+    "description": "シンプルロゴ入りベースボールキャップ。"
+  },
+  {
+    "id": "p_009",
+    "name": "サングラス",
+    "price": 2580,
+    "imageUrl": "https://placehold.co/600x600?text=Sunglasses",
+    "description": "UVカット対応の軽量サングラス。"
+  },
+  {
+    "id": "p_010",
+    "name": "バックパック",
+    "price": 5480,
+    "imageUrl": "https://placehold.co/600x600?text=Backpack",
+    "description": "通勤通学に使える多機能リュック。"
+  },
+  {
+    "id": "p_011",
+    "name": "ニットセーター",
+    "price": 4280,
+    "imageUrl": "https://placehold.co/600x600?text=Knit",
+    "description": "暖かく柔らかな着心地のニット。"
+  },
+  {
+    "id": "p_012",
+    "name": "スラックス",
+    "price": 4680,
+    "imageUrl": "https://placehold.co/600x600?text=Slacks",
+    "description": "きれいめスタイルに合う定番パンツ。"
+  }
+]
