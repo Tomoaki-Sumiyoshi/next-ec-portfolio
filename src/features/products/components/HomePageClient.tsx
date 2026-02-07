@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 
 import { useProductsStore } from '@/features/products/store/useProductsStore';
 
+import ProductDetailModal from './ProductDetailModal';
 import ProductsView from './ProductsView';
 
 export default function HomePageClient() {
@@ -13,5 +14,10 @@ export default function HomePageClient() {
     fetchProducts();
   }, [fetchProducts]);
 
-  return <ProductsView />;
+  return (
+    <>
+      <ProductsView />
+      <ProductDetailModal />
+    </>
+  );
 }

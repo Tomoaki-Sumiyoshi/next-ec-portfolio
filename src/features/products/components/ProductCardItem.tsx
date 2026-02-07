@@ -1,16 +1,24 @@
 'use client';
 
 import { Card, Image, Text } from '@mantine/core';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import type { Product } from '@/features/products/domain/product.schema';
-import { useProductsStore } from '@/features/products/store/useProductsStore';
 
 type Props = {
   product: Product;
 };
 
 export default function ProductCardItem({ product }: Props) {
-  const setSelectedProductId = useProductsStore((s) => s.setSelectedProductId);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const openModal = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('id', product.id);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
 
   return (
     <Card
@@ -18,7 +26,7 @@ export default function ProductCardItem({ product }: Props) {
       radius="md"
       p="md"
       style={{ cursor: 'pointer' }}
-      onClick={() => setSelectedProductId(product.id)}
+      onClick={openModal}
     >
       <Card.Section>
         <Image src={product.imageUrl} alt={product.name} height={180} />
