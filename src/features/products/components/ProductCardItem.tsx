@@ -3,7 +3,9 @@
 import { Card, Image, Text } from '@mantine/core';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import type { Product } from '@/features/products/domain/product.schema';
+import QuantityControl from '@/shared/components/QuantityControl/QuantityControl';
+
+import { Product } from '../types/product';
 
 type Props = {
   product: Product;
@@ -16,29 +18,27 @@ export default function ProductCardItem({ product }: Props) {
 
   const openModal = () => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('id', product.id);
+    params.set('productId', product.id);
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   return (
-    <Card
-      withBorder
-      radius="md"
-      p="md"
-      style={{ cursor: 'pointer' }}
-      onClick={openModal}
-    >
-      <Card.Section>
-        <Image src={product.imageUrl} alt={product.name} height={180} />
-      </Card.Section>
+    <Card withBorder radius="md" p="md">
+      <div onClick={openModal} style={{ cursor: 'pointer' }}>
+        <Card.Section>
+          <Image src={product.imageUrl} alt={product.name} height={180} />
+        </Card.Section>
 
-      <Text mt="sm" fw={600} lineClamp={1}>
-        {product.name}
-      </Text>
+        <Text mt="sm" fw={600} lineClamp={1}>
+          {product.name}
+        </Text>
 
-      <Text size="sm" c="dimmed">
-        ¥{product.price}
-      </Text>
+        <Text size="sm" c="dimmed">
+          ¥{product.price}
+        </Text>
+      </div>
+
+      <QuantityControl />
     </Card>
   );
 }

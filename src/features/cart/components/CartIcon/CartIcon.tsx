@@ -21,7 +21,7 @@ export default function CartIcon() {
   if (totalQuantity <= 0) {
     return (
       <ActionIcon
-        component="a"
+        component={Link}
         href="/cart"
         variant="subtle"
         size="lg"

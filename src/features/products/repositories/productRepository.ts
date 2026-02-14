@@ -1,6 +1,7 @@
-import type { Product } from '../domain/product.schema';
+import type { Product, ProductMap } from '../types/product';
 
-export type ProductRepository = {
-  list: () => Promise<Product[]>;
-  getById: (id: string) => Promise<Product | null>;
-};
+export interface ProductRepository {
+  getMap(): Promise<ProductMap>;
+  getById(id: string): Promise<Product | null>;
+  getMapByIds(ids: string[]): Promise<ProductMap>;
+}
