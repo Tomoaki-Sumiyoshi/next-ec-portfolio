@@ -2,7 +2,7 @@
 
 import { Anchor, AppShellHeader, Burger, Group, Image } from '@mantine/core';
 
-import CartIcon from '../../cart/components/CartIcon';
+import CartIcon from '../../cart/components/CartIcon/CartIcon';
 
 type Props = {
   opened: boolean;
@@ -34,7 +34,7 @@ export default function ShopHeader({ opened, onToggle }: Props) {
         </Group>
 
         {/* Right: cart */}
-        <CartIcon count={1} />
+        <CartIcon />
       </Group>
     </AppShellHeader>
   );

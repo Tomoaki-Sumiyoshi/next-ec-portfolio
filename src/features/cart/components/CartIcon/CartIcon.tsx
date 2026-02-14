@@ -2,16 +2,23 @@
 
 import { ActionIcon } from '@mantine/core';
 import { IconShoppingCart } from '@tabler/icons-react';
+import Link from 'next/link';
+import { useEffect } from 'react';
 
 import styles from './CartIcon.module.scss';
+import { useCartStore } from '../../store/cart.store';
 
-type Props = {
-  count?: number;
-};
+export default function CartIcon() {
+  const totalQuantity = useCartStore((state) => state.totalQuantity());
+  const init = useCartStore((state) => state.init);
+  const initialized = useCartStore((state) => state.initialized);
 
-export default function CartIcon({ count = 1 }: Props) {
+  useEffect(() => {
+    if (!initialized) init();
+  }, [initialized, init]);
+
   // 表示ロジック
-  if (count <= 0) {
+  if (totalQuantity <= 0) {
     return (
       <ActionIcon
         component="a"
@@ -25,11 +32,11 @@ export default function CartIcon({ count = 1 }: Props) {
     );
   }
 
-  const label = count > 9 ? '9+' : String(count);
+  const label = totalQuantity > 9 ? '9+' : String(totalQuantity);
 
   return (
     <ActionIcon
-      component="a"
+      component={Link}
       href="/cart"
       variant="subtle"
       size="lg"
