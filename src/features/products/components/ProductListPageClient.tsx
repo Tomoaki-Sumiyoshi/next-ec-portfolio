@@ -1,6 +1,9 @@
 'use client';
 
 import { Container, SimpleGrid, Text } from '@mantine/core';
+import { useEffect } from 'react';
+
+import { useCartStore } from '@/features/cart/store/cart.store';
 
 import ProductCardItem from './ProductCardItem';
 import ProductDetailModal from './ProductDetailModal';
@@ -11,6 +14,15 @@ type Props = {
 };
 
 export default function ProductListPageClient({ productList }: Props) {
+  const initialized = useCartStore((s) => s.initialized);
+  const init = useCartStore((s) => s.init);
+
+  useEffect(() => {
+    if (!initialized) {
+      init();
+    }
+  }, [initialized, init]);
+
   if (productList.length === 0) {
     return (
       <>

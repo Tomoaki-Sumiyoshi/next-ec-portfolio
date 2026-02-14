@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { de } from 'zod/locales';
 
 export const ProductIdSchema = z.string().min(1);
 

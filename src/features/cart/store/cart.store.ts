@@ -15,6 +15,7 @@ type CartState = {
   init: () => Promise<void>;
 
   // actions
+  getQuantity: (productId: string) => number;
   addItem: (productId: string) => Promise<void>;
   updateQuantity: (productId: string, quantity: number) => Promise<void>;
   removeItem: (productId: string) => Promise<void>;
@@ -39,6 +40,11 @@ export const useCartStore = create<CartState>((set, get) => ({
     const repo = getCartRepository();
     const cart = await repo.get();
     set({ cart });
+  },
+
+  getQuantity: (productId) => {
+    const cart = get().cart;
+    return cart[productId] ?? 0;
   },
 
   addItem: async (productId) => {
