@@ -1,3 +1,5 @@
+import CartPageClient from '@/features/cart/components/CartPageClient/CartPageClient';
+
 export default function CartPage() {
-  return <div>Cart</div>;
+  return <CartPageClient />;
 }

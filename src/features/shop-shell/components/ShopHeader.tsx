@@ -2,7 +2,7 @@
 
 import { Anchor, AppShellHeader, Burger, Group, Image } from '@mantine/core';
 
-import CartIcon from '../../cart/components/CartIcon/CartIcon';
+import { CartIcon } from '@/features/cart/components/CartIcon';
 
 type Props = {
   opened: boolean;
