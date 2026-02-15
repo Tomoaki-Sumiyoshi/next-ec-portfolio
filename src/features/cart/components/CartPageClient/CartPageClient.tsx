@@ -1,13 +1,11 @@
 'use client';
 
 import {
-  ActionIcon,
   Button,
   Container,
   Divider,
   Grid,
   Group,
-  Image,
   Paper,
   Stack,
   Text,
@@ -16,67 +14,80 @@ import {
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 
-import { ProductMap } from '@/features/products/types/product';
-import { getProductMapByIds } from '@/features/products/usecases/getProductMapByIds';
+import { Product } from '@/features/products/types/product';
+import { getProductListByIds } from '@/features/products/usecases/getProductListByIds';
 
-import CartItem from './CartItem';
+import CartItem from './CartPaperItem';
 import RightSummary from './RightSummary';
 import { useCartStore } from '../../store/cart.store';
-import { CartProduct } from '../../types/cart';
 
 export default function CartPageClient() {
   const initialized = useCartStore((s) => s.initialized);
-  const init = useCartStore((s) => s.init);
 
   const cart = useCartStore((s) => s.cart);
   const totalQuantity = useCartStore((s) => s.totalQuantity());
 
-  const [productMap, setProductMap] = useState<ProductMap>({});
+  const [productList, setProductList] = useState<Product[] | null>(null);
 
   useEffect(() => {
     if (!initialized) {
-      init();
+      return;
     }
-  }, [initialized, init]);
 
-  useEffect(() => {
     (async () => {
       const ids = Object.keys(cart);
       if (ids.length === 0) {
-        setProductMap({});
+        setProductList([]);
         return;
       }
+      const data = await getProductListByIds(ids);
 
-      const productMap = await getProductMapByIds(ids);
-      setProductMap(productMap);
+      setProductList(data);
     })();
-  }, [cart]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialized]);
 
-  const cartProductList = useMemo(() => {
-    const resultList: CartProduct[] = [];
-    Object.entries(cart).forEach(([productId, quantity]) => {
-      const product = productMap[productId];
-      if (!!product) {
-        resultList.push({ ...product, quantity });
-      }
-    });
-    return resultList;
-  }, [cart, productMap]);
+  const currentProductList = useMemo(() => {
+    return productList?.filter((product) => !!cart[product.id]) ?? [];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productList, Object.keys(cart).length]);
 
   const totalPrice = useMemo(() => {
-    return cartProductList.reduce(
-      (sum, r) => sum + (r.price ?? 0) * r.quantity,
+    return currentProductList.reduce(
+      (sum, r) => sum + r.price * (cart[r.id] ?? 0),
       0,
     );
-  }, [cartProductList]);
+  }, [currentProductList, cart]);
 
-  if (!initialized) {
+  if (!initialized || !productList) {
     return (
       <Container py="md">
         <Title order={2}>カート</Title>
         <Text size="sm" mt="sm">
           読み込み中...
         </Text>
+      </Container>
+    );
+  }
+
+  if (currentProductList.length === 0) {
+    return (
+      <Container py="md">
+        <Group justify="space-between" align="flex-end">
+          <Title order={2}>カート</Title>
+          <Text size="sm">点数: {totalQuantity}</Text>
+        </Group>
+
+        <Divider my="md" />
+
+        <Paper withBorder p="md" radius="md">
+          <Stack align="center">
+            <Text>カートは空です。</Text>
+            <Button mt="md" component={Link} href="/">
+              商品一覧へ
+            </Button>
+          </Stack>
+        </Paper>
       </Container>
     );
   }
@@ -94,8 +105,8 @@ export default function CartPageClient() {
         {/* 左：明細（横いっぱい） */}
         <Grid.Col span={{ base: 12, md: 8 }}>
           <Stack gap="sm">
-            {cartProductList.map((cartProduct) => (
-              <CartItem key={cartProduct.id} cartProduct={cartProduct} />
+            {currentProductList.map((product) => (
+              <CartItem key={product.id} product={product} />
             ))}
           </Stack>
         </Grid.Col>
@@ -105,13 +116,6 @@ export default function CartPageClient() {
           <RightSummary totalPrice={totalPrice} />
         </Grid.Col>
       </Grid>
-
-      {/* <Paper withBorder p="md" radius="md">
-        <Text>カートは空です。</Text>
-        <Button mt="md" component={Link} href="/">
-          商品一覧へ
-        </Button>
-      </Paper> */}
     </Container>
   );
 }

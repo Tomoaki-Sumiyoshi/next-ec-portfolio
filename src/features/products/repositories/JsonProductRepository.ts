@@ -3,44 +3,29 @@ import rawProductList from '@/data/products.json';
 import { ProductArraySchema } from '../schemas/product.schema';
 
 import type { ProductRepository } from './ProductRepository';
-import type { Product, ProductMap } from '../types/product';
+import type { Product } from '../types/product';
 
 export class JsonProductRepository implements ProductRepository {
-  private readonly productMap: ProductMap;
+  private readonly productList: Product[];
 
   constructor() {
-    const productList = ProductArraySchema.parse(rawProductList);
-
-    const map: ProductMap = {};
-    for (const product of productList) {
-      // id重複はデータ不整合なので明示的に落とす
-      if (map[product.id]) {
-        throw new Error(`Duplicate product id: ${product.id}`);
-      }
-      map[product.id] = product;
-    }
-
-    this.productMap = map;
+    const data = ProductArraySchema.parse(rawProductList);
+    this.productList = data;
   }
 
-  async getMap(): Promise<ProductMap> {
-    return this.productMap;
+  async list(): Promise<Product[]> {
+    return this.productList;
   }
 
   async getById(id: string): Promise<Product | null> {
-    return this.productMap[id] ?? null;
+    return this.productList.find((product) => product.id === id) ?? null;
   }
 
-  async getMapByIds(ids: string[]): Promise<ProductMap> {
-    const map: ProductMap = {};
+  async getByIds(ids: string[]): Promise<Product[]> {
+    if (ids.length === 0) {
+      return [];
+    }
 
-    ids.forEach((id) => {
-      const product = this.productMap[id];
-      if (product) {
-        map[id] = product;
-      }
-    });
-
-    return map;
+    return this.productList.filter((product) => ids.includes(product.id));
   }
 }

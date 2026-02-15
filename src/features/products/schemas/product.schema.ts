@@ -12,6 +12,4 @@ export const ProductSchema = z.object({
 
 export const ProductArraySchema = z.array(ProductSchema);
 
-export const ProductMapSchema = z.record(ProductIdSchema, ProductSchema);
-
 export type Product = z.infer<typeof ProductSchema>;

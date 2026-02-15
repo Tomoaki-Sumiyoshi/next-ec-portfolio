@@ -1,7 +1,7 @@
-import type { Product, ProductMap } from '../types/product';
+import type { Product } from '../types/product';
 
 export interface ProductRepository {
-  getMap(): Promise<ProductMap>;
+  list(): Promise<Product[]>;
   getById(id: string): Promise<Product | null>;
-  getMapByIds(ids: string[]): Promise<ProductMap>;
+  getByIds(ids: string[]): Promise<Product[]>;
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Card, Image, Text } from '@mantine/core';
+import { Button, Card, Group, Image, Text } from '@mantine/core';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { useCartStore } from '@/features/cart/store/cart.store';
@@ -41,14 +41,15 @@ export default function ProductCardItem({ product }: Props) {
           ¥{product.price}
         </Text>
       </div>
-
-      {quantity > 0 ? (
-        <QuantityControl productId={product.id} />
-      ) : (
-        <Button fullWidth mt="md" onClick={() => addItem(product.id)}>
-          カートに追加
-        </Button>
-      )}
+      <Group gap="xs" mt="md" w="100%" justify="space-between">
+        {quantity > 0 ? (
+          <QuantityControl productId={product.id} />
+        ) : (
+          <Button fullWidth onClick={() => addItem(product.id)}>
+            カートに追加
+          </Button>
+        )}
+      </Group>
     </Card>
   );
 }
