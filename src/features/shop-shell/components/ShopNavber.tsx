@@ -1,6 +1,6 @@
 'use client';
 
-import { AppShellNavbar, NavLink } from '@mantine/core';
+import { AppShell, NavLink } from '@mantine/core';
 import { IconHistory } from '@tabler/icons-react';
 import Link from 'next/link';
 
@@ -10,7 +10,7 @@ type Props = {
 
 export default function ShopNavbar({ onNavigate }: Props) {
   return (
-    <AppShellNavbar p="md">
+    <AppShell.Navbar p="md">
       <NavLink
         component={Link}
         href="/order"
@@ -18,6 +18,6 @@ export default function ShopNavbar({ onNavigate }: Props) {
         leftSection={<IconHistory size={16} />}
         onClick={onNavigate}
       />
-    </AppShellNavbar>
+    </AppShell.Navbar>
   );
 }

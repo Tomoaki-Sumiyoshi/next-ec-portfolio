@@ -1,6 +1,6 @@
 'use client';
 
-import { Anchor, AppShellHeader, Burger, Group, Image } from '@mantine/core';
+import { Anchor, AppShell, Burger, Group, Image } from '@mantine/core';
 
 import { CartIcon } from '@/features/cart/components/CartIcon';
 
@@ -11,14 +11,14 @@ type Props = {
 
 export default function ShopHeader({ opened, onToggle }: Props) {
   return (
-    <AppShellHeader>
+    <AppShell.Header>
       <Group h="100%" px="md" justify="space-between">
         {/* Left: burger + logo */}
         <Group gap="sm">
           <Burger
             opened={opened}
             onClick={onToggle}
-            hiddenFrom="sm"
+            hiddenFrom="md"
             size="sm"
           />
 
@@ -36,6 +36,6 @@ export default function ShopHeader({ opened, onToggle }: Props) {
         {/* Right: cart */}
         <CartIcon />
       </Group>
-    </AppShellHeader>
+    </AppShell.Header>
   );
 }

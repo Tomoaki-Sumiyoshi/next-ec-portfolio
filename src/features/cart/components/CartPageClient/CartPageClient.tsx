@@ -7,6 +7,7 @@ import {
   Grid,
   Group,
   Paper,
+  ScrollArea,
   Stack,
   Text,
   Title,
@@ -93,7 +94,7 @@ export default function CartPageClient() {
   }
 
   return (
-    <Container py="md">
+    <>
       <Group justify="space-between" align="flex-end">
         <Title order={2}>カート</Title>
         <Text size="sm">点数: {totalQuantity}</Text>
@@ -104,18 +105,20 @@ export default function CartPageClient() {
       <Grid align="start">
         {/* 左：明細（横いっぱい） */}
         <Grid.Col span={{ base: 12, md: 8 }}>
-          <Stack gap="sm">
-            {currentProductList.map((product) => (
-              <CartItem key={product.id} product={product} />
-            ))}
-          </Stack>
+          <ScrollArea.Autosize mah="auto">
+            <Stack gap="sm">
+              {currentProductList.map((product) => (
+                <CartItem key={product.id} product={product} />
+              ))}
+            </Stack>
+          </ScrollArea.Autosize>
         </Grid.Col>
 
         {/* 右：サマリー（固定幅寄り） */}
-        <Grid.Col span={{ base: 12, md: 4 }}>
+        <Grid.Col span={{ base: 12, md: 4 }} pos="sticky" bottom={0}>
           <RightSummary totalPrice={totalPrice} />
         </Grid.Col>
       </Grid>
-    </Container>
+    </>
   );
 }

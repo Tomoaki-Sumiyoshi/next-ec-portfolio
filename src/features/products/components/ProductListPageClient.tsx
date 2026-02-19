@@ -32,7 +32,7 @@ export default function ProductListPageClient() {
   return (
     <>
       <Container py="md">
-        <SimpleGrid cols={{ base: 2, sm: 3, md: 4 }} spacing="md">
+        <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="md">
           {productList.map((product) => (
             <ProductCardItem key={product.id} product={product} />
           ))}
