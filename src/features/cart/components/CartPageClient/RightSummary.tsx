@@ -16,7 +16,7 @@ export default function RightSummary({ totalPrice }: Props) {
         <Text fw={700}>¥{totalPrice.toLocaleString()}</Text>
       </Group>
 
-      <Button fullWidth mt="md">
+      <Button fullWidth mt="md" component={Link} href="/checkout">
         レジに進む
       </Button>
 
