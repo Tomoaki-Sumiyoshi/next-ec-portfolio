@@ -12,15 +12,34 @@ import {
   Button,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { v4 } from 'uuid';
 
-export default function CheckoutFrom() {
+import { useCartStore } from '@/features/cart/store/cart.store';
+import { Order } from '@/features/order/types/order';
+import { Product } from '@/features/products/types/product';
+
+import { setCheckout } from '../../usecase/setCheckout';
+
+type Props = {
+  productList: Product[];
+};
+
+export default function CheckoutFrom({ productList }: Props) {
+  const router = useRouter();
+  const [submitting, setSubmitting] = useState<boolean>(false);
+
+  const getQuantity = useCartStore((s) => s.getQuantity);
+  const clear = useCartStore((s) => s.clear);
+
   const form = useForm({
     initialValues: {
       fullName: '',
       email: '',
-      postalCode: '',
-      address1: '',
-      address2: '',
+      postCode: '',
+      addressLine1: '',
+      addressLine2: '',
       cardNumber: '',
       cardExpiry: '',
       cardCvc: '',
@@ -32,9 +51,10 @@ export default function CheckoutFrom() {
         /^\S+@\S+\.\S+$/.test(v)
           ? null
           : 'メールアドレスの形式が正しくありません',
-      postalCode: (v) =>
+      postCode: (v) =>
         /^\d{3}-?\d{4}$/.test(v) ? null : '郵便番号（例: 123-4567）',
-      address1: (v) => (v.trim().length >= 5 ? null : '住所を入力してください'),
+      addressLine1: (v) =>
+        v.trim().length >= 5 ? null : '住所を入力してください',
       cardNumber: (v) =>
         /^\d{12,19}$/.test(v.replace(/\s/g, ''))
           ? null
@@ -45,14 +65,44 @@ export default function CheckoutFrom() {
     },
   });
 
+  const onSubmit = form.onSubmit(() => {
+    if (submitting) return;
+
+    setSubmitting(true);
+
+    const { fullName, email, postCode, addressLine1, addressLine2 } =
+      form.getValues();
+
+    const snapshot: Order = {
+      id: v4(),
+      createdAt: new Date().toISOString(),
+      itemList: productList.map((product) => ({
+        productId: product.id,
+        quantity: getQuantity(product.id),
+        marketPrice: product.price,
+      })),
+      customer: {
+        fullName,
+        email,
+      },
+      shippingAddress: {
+        postCode,
+        addressLine1,
+        addressLine2,
+      },
+    };
+
+    // 外部送信なし（架空決済）
+    setCheckout(snapshot);
+    clear();
+    router.push('/checkout/complete');
+  });
+
   return (
     <>
       <Card withBorder radius="md">
-        <Alert title="カートが空です" color="red">
-          決済を行うには、商品をカートに追加してください。
-        </Alert>
         <Stack gap="lg">
-          <form>
+          <form onSubmit={onSubmit}>
             <Stack gap="md">
               <Title order={4}>配送先・連絡先</Title>
               <TextInput
@@ -68,17 +118,17 @@ export default function CheckoutFrom() {
               <TextInput
                 label="郵便番号"
                 placeholder="123-4567"
-                {...form.getInputProps('postalCode')}
+                {...form.getInputProps('postCode')}
               />
               <TextInput
                 label="住所"
                 placeholder="東京都○○区…"
-                {...form.getInputProps('address1')}
+                {...form.getInputProps('addressLine1')}
               />
               <TextInput
                 label="建物名・部屋番号（任意）"
                 placeholder="○○ビル 101"
-                {...form.getInputProps('address2')}
+                {...form.getInputProps('addressLine2')}
               />
 
               <Divider />
@@ -110,7 +160,9 @@ export default function CheckoutFrom() {
 
               <Group justify="space-between" align="center" mt="sm">
                 <Anchor href="/cart">カートに戻る</Anchor>
-                <Button type="submit">{} を支払う（ダミー）</Button>
+                <Button type="submit" loading={submitting}>
+                  支払う（ダミー）
+                </Button>
               </Group>
             </Stack>
           </form>

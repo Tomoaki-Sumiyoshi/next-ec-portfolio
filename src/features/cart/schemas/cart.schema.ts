@@ -1,8 +1,7 @@
 import { z } from 'zod';
 
-export const ProductIdSchema = z.string().min(1);
+import { ProductIdSchema } from '@/features/products/schemas/product.schema';
 
-export const CartSchema = z.record(
-  ProductIdSchema,
-  z.number().int().positive(),
-);
+export const CartQuantitySchema = z.number().int().positive();
+
+export const CartSchema = z.record(ProductIdSchema, CartQuantitySchema);

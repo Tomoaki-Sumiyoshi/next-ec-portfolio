@@ -10,14 +10,36 @@ import {
   Text,
   Image,
 } from '@mantine/core';
+import { useMemo } from 'react';
 
+import { useCartStore } from '@/features/cart/store/cart.store';
 import { Product } from '@/features/products/types/product';
 
 type Props = {
   productList: Product[];
 };
 
+const POSTAGE = 500;
+const TAX_RATE = 0.1;
+
 export default function RightSummary({ productList }: Props) {
+  const getQuantity = useCartStore((s) => s.getQuantity);
+
+  const subtotalPrice = useMemo(() => {
+    return productList.reduce(
+      (sum, r) => sum + r.price * (getQuantity(r.id) ?? 0),
+      0,
+    );
+  }, [productList, getQuantity]);
+
+  const consumptionTax = useMemo(() => {
+    return subtotalPrice * TAX_RATE;
+  }, [subtotalPrice]);
+
+  const totalPrice = useMemo(() => {
+    return subtotalPrice + POSTAGE + consumptionTax;
+  }, [subtotalPrice, consumptionTax]);
+
   return (
     <Card withBorder radius="md">
       <Stack gap="md">
@@ -41,10 +63,14 @@ export default function RightSummary({ productList }: Props) {
                         {product.name}
                       </Text>
                       <Text size="sm" c="dimmed" mt={4}>
-                        数量: {'3'}
+                        数量: {getQuantity(product.id)}
                       </Text>
                     </Box>
-                    <Text fw={600}>{'3000'}</Text>
+                    <Text fw={600}>
+                      {(
+                        product.price * getQuantity(product.id)
+                      ).toLocaleString()}
+                    </Text>
                   </Group>
                 </Box>
               </Group>
@@ -57,20 +83,20 @@ export default function RightSummary({ productList }: Props) {
         <Stack gap={6}>
           <Group justify="space-between">
             <Text c="dimmed">小計</Text>
-            <Text>{}</Text>
+            <Text>{subtotalPrice.toLocaleString()}</Text>
           </Group>
           <Group justify="space-between">
             <Text c="dimmed">送料</Text>
-            <Text>{}</Text>
+            <Text>{POSTAGE.toLocaleString()}</Text>
           </Group>
           <Group justify="space-between">
             <Text c="dimmed">消費税（目安）</Text>
-            <Text>{}</Text>
+            <Text>{consumptionTax.toLocaleString()}</Text>
           </Group>
           <Divider />
           <Group justify="space-between">
             <Text fw={700}>合計</Text>
-            <Text fw={700}>{}</Text>
+            <Text fw={700}>{totalPrice.toLocaleString()}</Text>
           </Group>
         </Stack>
       </Stack>

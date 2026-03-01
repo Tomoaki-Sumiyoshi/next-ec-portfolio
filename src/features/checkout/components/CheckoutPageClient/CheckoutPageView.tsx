@@ -1,6 +1,7 @@
 'use client';
 
 import { Alert, Anchor, Card, Grid, Text } from '@mantine/core';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import { useCartStore } from '@/features/cart/store/cart.store';
@@ -49,7 +50,9 @@ export default function CheckoutPageView() {
         <Alert title="カートが空です" color="red">
           決済を行うには、商品をカートに追加してください。
         </Alert>
-        <Anchor href="/cart">カートに戻る</Anchor>
+        <Anchor component={Link} href="/">
+          商品一覧へ
+        </Anchor>
       </Card>
     );
   }
@@ -57,7 +60,7 @@ export default function CheckoutPageView() {
   return (
     <Grid align="start">
       <Grid.Col span={{ base: 12, md: 8 }}>
-        <CheckoutFrom />
+        <CheckoutFrom productList={productList} />
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4 }}>
         <RightSummary productList={productList} />
