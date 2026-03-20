@@ -1,6 +1,5 @@
-import { Order } from '@/features/order/types/order';
 import { getCheckoutRepository } from '@/shared/lib/repository/di';
 
-export async function getCheckout(): Promise<Order | null> {
+export async function getCheckout(): Promise<string | null> {
   return getCheckoutRepository().get();
 }

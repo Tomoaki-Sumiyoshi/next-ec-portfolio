@@ -1,11 +1,8 @@
-import { OrderSchema } from '@/features/order/schemas/order.schema';
-import { Order } from '@/features/order/types/order';
-
 import { CheckoutRepository } from './CheckoutRepository';
 
 const STORAGE_KEY = 'portfolio_ec_checkout';
 
-function readStorage(): Order | null {
+function readStorage(): string | null {
   if (typeof window === 'undefined') {
     return null;
   }
@@ -14,30 +11,32 @@ function readStorage(): Order | null {
   if (!raw) return null;
 
   try {
-    const parsed = JSON.parse(raw);
-    return OrderSchema.parse(parsed);
+    return raw;
   } catch {
     return null;
   }
 }
 
-function writeStorage(order: Order | null) {
+function writeStorage(id: string) {
   if (typeof window === 'undefined') return;
-  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(order));
+  sessionStorage.setItem(STORAGE_KEY, id);
+}
+
+function removeStorage() {
+  if (typeof window === 'undefined') return;
+  sessionStorage.removeItem(STORAGE_KEY);
 }
 
 export class SessionStorageCheckoutRepository implements CheckoutRepository {
-  async get(): Promise<Order | null> {
+  async get(): Promise<string | null> {
     return readStorage();
   }
 
-  async set(order: Order | null): Promise<Order | null> {
-    writeStorage(OrderSchema.parse(order));
-    return order;
+  async set(id: string): Promise<void> {
+    writeStorage(id);
   }
 
-  async clear(): Promise<null> {
-    writeStorage(null);
-    return null;
+  async clear(): Promise<void> {
+    removeStorage();
   }
 }

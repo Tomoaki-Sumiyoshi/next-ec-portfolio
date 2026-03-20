@@ -1,7 +1,5 @@
-import { Order } from '@/features/order/types/order';
-
 export interface CheckoutRepository {
-  get(): Promise<Order | null>;
-  set(order: Order | null): Promise<Order | null>;
-  clear(): Promise<null>;
+  get(): Promise<string | null>;
+  set(id: string): Promise<void>;
+  clear(): Promise<void>;
 }

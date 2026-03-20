@@ -25,10 +25,17 @@ export const OrderAddressSchema = z.object({
   addressLine2: z.string().optional(),
 });
 
-export const OrderSchema = z.object({
-  id: z.uuidv4(),
-  createdAt: z.iso.datetime(),
+export const OrderRequestParamSchema = z.object({
   itemList: z.array(OrderItemSchema),
   customer: OrderCustomerSchema,
   shippingAddress: OrderAddressSchema,
 });
+
+export const OrderSchema = z
+  .object({
+    id: z.uuidv4(),
+    createdAt: z.iso.datetime(),
+  })
+  .and(OrderRequestParamSchema);
+
+export const OrderArraySchema = z.array(OrderSchema);

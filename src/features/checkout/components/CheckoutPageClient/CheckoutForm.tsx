@@ -14,10 +14,10 @@ import {
 import { useForm } from '@mantine/form';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { v4 } from 'uuid';
 
 import { useCartStore } from '@/features/cart/store/cart.store';
-import { Order } from '@/features/order/types/order';
+import { OrderRequestParam } from '@/features/order/types/order';
+import { setOrder } from '@/features/order/usecase/setOrder';
 import { Product } from '@/features/products/types/product';
 
 import { setCheckout } from '../../usecase/setCheckout';
@@ -65,7 +65,7 @@ export default function CheckoutFrom({ productList }: Props) {
     },
   });
 
-  const onSubmit = form.onSubmit(() => {
+  const onSubmit = form.onSubmit(async () => {
     if (submitting) return;
 
     setSubmitting(true);
@@ -73,9 +73,7 @@ export default function CheckoutFrom({ productList }: Props) {
     const { fullName, email, postCode, addressLine1, addressLine2 } =
       form.getValues();
 
-    const snapshot: Order = {
-      id: v4(),
-      createdAt: new Date().toISOString(),
+    const requestParam: OrderRequestParam = {
       itemList: productList.map((product) => ({
         productId: product.id,
         quantity: getQuantity(product.id),
@@ -92,8 +90,9 @@ export default function CheckoutFrom({ productList }: Props) {
       },
     };
 
-    // 外部送信なし（架空決済）
-    setCheckout(snapshot);
+    // 外部送信なし（架空決済)
+    const order = await setOrder(requestParam);
+    setCheckout(order.id);
     clear();
     router.push('/checkout/complete');
   });
