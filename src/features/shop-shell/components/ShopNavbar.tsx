@@ -18,7 +18,7 @@ export default function ShopNavbar({ onNavigate }: Props) {
       <NavLink
         component={Link}
         href={ROUTES.order}
-        label="雉ｼ蜈･螻･豁ｴ"
+        label="注文履歴"
         leftSection={<IconHistory size={16} />}
         onClick={onNavigate}
         variant="light"

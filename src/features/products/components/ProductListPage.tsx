@@ -13,8 +13,8 @@ export default function ProductListPage() {
 
   useEffect(() => {
     (async () => {
-      const data = await getProductList();
-      setProductList(data);
+      const fetchedProducts = await getProductList();
+      setProductList(fetchedProducts);
     })();
   }, []);
 

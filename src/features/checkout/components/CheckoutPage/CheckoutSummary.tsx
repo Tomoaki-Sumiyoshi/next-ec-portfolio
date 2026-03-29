@@ -22,14 +22,17 @@ type Props = {
 };
 
 export default function CheckoutSummary({ productList }: Props) {
-  const getQuantity = useCartStore((s) => s.getQuantity);
+  const getProductQuantity = useCartStore((cartState) =>
+    cartState.getQuantity
+  );
 
   const subtotalPrice = useMemo(() => {
     return productList.reduce(
-      (sum, product) => sum + product.price * (getQuantity(product.id) ?? 0),
+      (sum, product) =>
+        sum + product.price * (getProductQuantity(product.id) ?? 0),
       0
     );
-  }, [productList, getQuantity]);
+  }, [productList, getProductQuantity]);
 
   const consumptionTax = useMemo(() => {
     return subtotalPrice * TAX_RATE;
@@ -73,11 +76,14 @@ export default function CheckoutSummary({ productList }: Props) {
                         {product.name}
                       </Text>
                       <Text size="sm" c="dimmed" mt={4}>
-                        数量: {getQuantity(product.id)}
+                        数量: {getProductQuantity(product.id)}
                       </Text>
                     </Box>
                     <Text fw={700}>
-                      {(product.price * getQuantity(product.id)).toLocaleString()}円
+                      {(
+                        product.price * getProductQuantity(product.id)
+                      ).toLocaleString()}
+                      円
                     </Text>
                   </Group>
                 </Box>

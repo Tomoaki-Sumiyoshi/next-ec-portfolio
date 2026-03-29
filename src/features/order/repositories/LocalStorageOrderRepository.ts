@@ -44,15 +44,15 @@ export class LocalStorageOrderRepository implements OrderRepository {
     return readStorage().find((order) => order.id === id) ?? null;
   }
 
-  async set(param: OrderRequestParam): Promise<Order> {
-    const newOrder: Order = {
+  async set(orderRequest: OrderRequestParam): Promise<Order> {
+    const createdOrder: Order = {
       id: v4(),
       createdAt: new Date().toISOString(),
-      ...OrderRequestParamSchema.parse(param),
+      ...OrderRequestParamSchema.parse(orderRequest),
     };
 
-    writeStorage([...readStorage(), newOrder]);
-    return newOrder;
+    writeStorage([...readStorage(), createdOrder]);
+    return createdOrder;
   }
 
   async clear(): Promise<void> {

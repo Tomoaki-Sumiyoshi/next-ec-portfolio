@@ -18,18 +18,22 @@ export default function ProductCard({ product }: Props) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const addItem = useCartStore((s) => s.addItem);
-  const quantity = useCartStore((s) => s.getQuantity(product.id));
+  const addItemToCart = useCartStore((cartState) => cartState.addItem);
+  const quantity = useCartStore((cartState) =>
+    cartState.getQuantity(product.id)
+  );
 
-  const openModal = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('productId', product.id);
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  const openProductDetail = () => {
+    const nextSearchParams = new URLSearchParams(searchParams.toString());
+    nextSearchParams.set('productId', product.id);
+    router.push(`${pathname}?${nextSearchParams.toString()}`, {
+      scroll: false,
+    });
   };
 
   return (
     <Card withBorder radius="md" p="md">
-      <div onClick={openModal} className={styles.clickable}>
+      <div onClick={openProductDetail} className={styles.clickable}>
         <Card.Section>
           <Image src={product.imageUrl} alt={product.name} height={180} />
         </Card.Section>
@@ -46,7 +50,7 @@ export default function ProductCard({ product }: Props) {
         {quantity > 0 ? (
           <QuantityControl productId={product.id} />
         ) : (
-          <Button fullWidth onClick={() => addItem(product.id)}>
+          <Button fullWidth onClick={() => addItemToCart(product.id)}>
             カートに追加
           </Button>
         )}

@@ -9,10 +9,10 @@ type CartState = {
   initialized: boolean;
 
   // derived
-  totalQuantity: () => number;
+  getTotalQuantity: () => number;
 
   // lifecycle
-  init: () => Promise<void>;
+  initializeCart: () => Promise<void>;
 
   // actions
   getQuantity: (productId: string) => number;
@@ -20,54 +20,54 @@ type CartState = {
   updateQuantity: (productId: string, quantity: number) => Promise<void>;
   removeItem: (productId: string) => Promise<void>;
   clear: () => Promise<void>;
-  refresh: () => Promise<void>;
+  refreshCart: () => Promise<void>;
 };
 
 export const useCartStore = create<CartState>((set, get) => ({
   cart: {},
   initialized: false,
 
-  totalQuantity: () =>
+  getTotalQuantity: () =>
     Object.values(get().cart).reduce((sum, quantity) => sum + quantity, 0),
 
-  init: async () => {
-    const repo = getCartRepository();
-    const cart = await repo.get();
-    set({ cart, initialized: true });
+  initializeCart: async () => {
+    const cartRepository = getCartRepository();
+    const storedCart = await cartRepository.get();
+    set({ cart: storedCart, initialized: true });
   },
 
-  refresh: async () => {
-    const repo = getCartRepository();
-    const cart = await repo.get();
-    set({ cart });
+  refreshCart: async () => {
+    const cartRepository = getCartRepository();
+    const storedCart = await cartRepository.get();
+    set({ cart: storedCart });
   },
 
   getQuantity: (productId) => {
-    const cart = get().cart;
-    return cart[productId] ?? 0;
+    const currentCart = get().cart;
+    return currentCart[productId] ?? 0;
   },
 
   addItem: async (productId) => {
-    const repo = getCartRepository();
-    const cart = await repo.addItem(productId);
-    set({ cart });
+    const cartRepository = getCartRepository();
+    const updatedCart = await cartRepository.addItem(productId);
+    set({ cart: updatedCart });
   },
 
   updateQuantity: async (productId, quantity) => {
-    const repo = getCartRepository();
-    const cart = await repo.updateQuantity(productId, quantity);
-    set({ cart });
+    const cartRepository = getCartRepository();
+    const updatedCart = await cartRepository.updateQuantity(productId, quantity);
+    set({ cart: updatedCart });
   },
 
   removeItem: async (productId) => {
-    const repo = getCartRepository();
-    const cart = await repo.removeItem(productId);
-    set({ cart });
+    const cartRepository = getCartRepository();
+    const updatedCart = await cartRepository.removeItem(productId);
+    set({ cart: updatedCart });
   },
 
   clear: async () => {
-    const repo = getCartRepository();
-    const cart = await repo.clear();
-    set({ cart });
+    const cartRepository = getCartRepository();
+    const clearedCart = await cartRepository.clear();
+    set({ cart: clearedCart });
   },
 }));

@@ -33,8 +33,8 @@ export default function CheckoutForm({ productList }: Props) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
 
-  const getQuantity = useCartStore((s) => s.getQuantity);
-  const clear = useCartStore((s) => s.clear);
+  const getProductQuantity = useCartStore((cartState) => cartState.getQuantity);
+  const clearCart = useCartStore((cartState) => cartState.clear);
 
   const form = useForm({
     initialValues: {
@@ -83,10 +83,10 @@ export default function CheckoutForm({ productList }: Props) {
     const { fullName, email, postCode, addressLine1, addressLine2 } =
       form.getValues();
 
-    const requestParam: OrderRequestParam = {
+    const orderRequest: OrderRequestParam = {
       itemList: productList.map((product) => ({
         productId: product.id,
-        quantity: getQuantity(product.id),
+        quantity: getProductQuantity(product.id),
         marketPrice: product.price,
       })),
       customer: {
@@ -100,9 +100,9 @@ export default function CheckoutForm({ productList }: Props) {
       },
     };
 
-    const order = await setOrder(requestParam);
-    setCheckout(order.id);
-    await clear();
+    const createdOrder = await setOrder(orderRequest);
+    setCheckout(createdOrder.id);
+    await clearCart();
     router.push(ROUTES.checkoutComplete);
   });
 

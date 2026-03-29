@@ -15,8 +15,8 @@ import styles from './CheckoutPageView.module.scss';
 import CheckoutSummary from './CheckoutSummary';
 
 export default function CheckoutPageView() {
-  const initialized = useCartStore((s) => s.initialized);
-  const cart = useCartStore((s) => s.cart);
+  const initialized = useCartStore((cartState) => cartState.initialized);
+  const cart = useCartStore((cartState) => cartState.cart);
 
   const [productList, setProductList] = useState<Product[] | null>(null);
 
@@ -26,14 +26,14 @@ export default function CheckoutPageView() {
     }
 
     (async () => {
-      const ids = Object.keys(cart);
-      if (ids.length === 0) {
+      const productIds = Object.keys(cart);
+      if (productIds.length === 0) {
         setProductList([]);
         return;
       }
 
-      const data = await getProductListByIds(ids);
-      setProductList(data);
+      const fetchedProducts = await getProductListByIds(productIds);
+      setProductList(fetchedProducts);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialized]);

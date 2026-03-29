@@ -11,8 +11,10 @@ type Props = {
 };
 
 export default function QuantityControl({ productId }: Props) {
-  const updateQuantity = useCartStore((s) => s.updateQuantity);
-  const quantity = useCartStore((s) => s.getQuantity(productId));
+  const updateQuantity = useCartStore((cartState) => cartState.updateQuantity);
+  const quantity = useCartStore((cartState) =>
+    cartState.getQuantity(productId)
+  );
 
   return (
     <Box bd="1px solid var(--mantine-color-gray-3)" bdrs="sm" w="100%">

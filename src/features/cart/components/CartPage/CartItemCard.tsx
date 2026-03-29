@@ -20,8 +20,10 @@ type Props = {
 };
 
 export default function CartItemCard({ product }: Props) {
-  const quantity = useCartStore((s) => s.getQuantity(product.id));
-  const removeItem = useCartStore((s) => s.removeItem);
+  const quantity = useCartStore((cartState) =>
+    cartState.getQuantity(product.id),
+  );
+  const removeItemFromCart = useCartStore((cartState) => cartState.removeItem);
 
   return (
     <Group align="center" justify="space-between" wrap="nowrap">
@@ -56,7 +58,7 @@ export default function CartItemCard({ product }: Props) {
               variant="subtle"
               size="lg"
               aria-label="cart"
-              onClick={() => removeItem(product.id)}
+              onClick={() => removeItemFromCart(product.id)}
               w="auto"
             >
               <IconTrash size={20} />

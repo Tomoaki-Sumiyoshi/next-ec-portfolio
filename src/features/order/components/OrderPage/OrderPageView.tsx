@@ -21,7 +21,7 @@ import { SHIPPING_FEE, TAX_RATE } from '@/shared/constants/commerce';
 
 import styles from './OrderPageView.module.scss';
 
-function getPriceSummary(order: Order) {
+function calculateOrderPriceSummary(order: Order) {
   const subtotalPrice = order.itemList.reduce(
     (sum, item) => sum + item.marketPrice * item.quantity,
     0
@@ -42,7 +42,7 @@ export default function OrderPageView() {
 
   useEffect(() => {
     (async () => {
-      const [checkoutOrderId, orders] = await Promise.all([
+      const [checkoutOrderId, savedOrders] = await Promise.all([
         getCheckout(),
         getOrderList(),
       ]);
@@ -52,7 +52,7 @@ export default function OrderPageView() {
         await clearCheckout();
       }
 
-      const sortedOrders = [...orders].sort(
+      const sortedOrders = [...savedOrders].sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
@@ -97,7 +97,7 @@ export default function OrderPageView() {
 
       {orderList.map((order) => {
         const { subtotalPrice, consumptionTax, totalPrice } =
-          getPriceSummary(order);
+          calculateOrderPriceSummary(order);
         const isLatestOrder = order.id === latestOrderId;
 
         return (

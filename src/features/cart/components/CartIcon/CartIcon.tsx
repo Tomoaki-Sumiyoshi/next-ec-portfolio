@@ -10,13 +10,15 @@ import { ROUTES } from '@/shared/constants/routes';
 import { useCartStore } from '../../store/cart.store';
 
 export default function CartIcon() {
-  const totalQuantity = useCartStore((state) => state.totalQuantity());
-  const init = useCartStore((state) => state.init);
-  const initialized = useCartStore((state) => state.initialized);
+  const totalQuantity = useCartStore((cartState) =>
+    cartState.getTotalQuantity()
+  );
+  const initializeCart = useCartStore((cartState) => cartState.initializeCart);
+  const initialized = useCartStore((cartState) => cartState.initialized);
 
   useEffect(() => {
-    if (!initialized) init();
-  }, [initialized, init]);
+    if (!initialized) initializeCart();
+  }, [initialized, initializeCart]);
 
   if (totalQuantity <= 0) {
     return (

@@ -24,9 +24,11 @@ import CartSummary from './CartSummary';
 import { useCartStore } from '../../store/cart.store';
 
 export default function CartPage() {
-  const initialized = useCartStore((s) => s.initialized);
-  const cart = useCartStore((s) => s.cart);
-  const totalQuantity = useCartStore((s) => s.totalQuantity());
+  const initialized = useCartStore((cartState) => cartState.initialized);
+  const cart = useCartStore((cartState) => cartState.cart);
+  const totalQuantity = useCartStore((cartState) =>
+    cartState.getTotalQuantity()
+  );
 
   const [productList, setProductList] = useState<Product[] | null>(null);
 
@@ -36,14 +38,14 @@ export default function CartPage() {
     }
 
     (async () => {
-      const ids = Object.keys(cart);
-      if (ids.length === 0) {
+      const productIds = Object.keys(cart);
+      if (productIds.length === 0) {
         setProductList([]);
         return;
       }
 
-      const data = await getProductListByIds(ids);
-      setProductList(data);
+      const fetchedProducts = await getProductListByIds(productIds);
+      setProductList(fetchedProducts);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialized]);

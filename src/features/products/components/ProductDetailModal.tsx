@@ -1,6 +1,6 @@
 'use client';
 
-import { Modal, Image, Text, Group, Stack } from '@mantine/core';
+import { Group, Image, Modal, Stack, Text } from '@mantine/core';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -13,7 +13,7 @@ export default function ProductDetailModal() {
   const searchParams = useSearchParams();
 
   const productId = searchParams.get('productId');
-  const opened = !!productId;
+  const isOpened = !!productId;
 
   const [product, setProduct] = useState<Product | null>(null);
 
@@ -23,9 +23,10 @@ export default function ProductDetailModal() {
         setProduct(null);
         return;
       }
+
       try {
-        const data = await getProductById(productId);
-        setProduct(data);
+        const fetchedProduct = await getProductById(productId);
+        setProduct(fetchedProduct);
       } catch (error) {
         console.error('Failed to fetch product by id:', error);
         setProduct(null);
@@ -33,16 +34,18 @@ export default function ProductDetailModal() {
     })();
   }, [productId]);
 
-  const close = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete('productId');
+  const closeModal = () => {
+    const nextSearchParams = new URLSearchParams(searchParams.toString());
+    nextSearchParams.delete('productId');
 
-    const qs = params.toString();
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    const queryString = nextSearchParams.toString();
+    router.replace(queryString ? `${pathname}?${queryString}` : pathname, {
+      scroll: false,
+    });
   };
 
   return (
-    <Modal opened={opened} onClose={close} title="商品詳細" centered>
+    <Modal opened={isOpened} onClose={closeModal} title="商品詳細" centered>
       {!product ? (
         <Text size="sm">商品が見つかりません。</Text>
       ) : (

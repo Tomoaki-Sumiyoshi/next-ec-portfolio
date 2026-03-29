@@ -9,8 +9,8 @@ export class JsonProductRepository implements ProductRepository {
   private readonly productList: Product[];
 
   constructor() {
-    const data = ProductArraySchema.parse(rawProductList);
-    this.productList = data;
+    const parsedProductList = ProductArraySchema.parse(rawProductList);
+    this.productList = parsedProductList;
   }
 
   async list(): Promise<Product[]> {
@@ -21,11 +21,13 @@ export class JsonProductRepository implements ProductRepository {
     return this.productList.find((product) => product.id === id) ?? null;
   }
 
-  async getByIds(ids: string[]): Promise<Product[]> {
-    if (ids.length === 0) {
+  async getByIds(productIds: string[]): Promise<Product[]> {
+    if (productIds.length === 0) {
       return [];
     }
 
-    return this.productList.filter((product) => ids.includes(product.id));
+    return this.productList.filter((product) =>
+      productIds.includes(product.id)
+    );
   }
 }
