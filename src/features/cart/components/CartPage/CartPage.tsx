@@ -1,13 +1,15 @@
 'use client';
 
 import { Grid, ScrollArea, Text } from '@mantine/core';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useCartStore } from '@/features/cart/store/cart.store';
 import { getCartProductList } from '@/features/cart/usecases/getCartProductList';
 import { Product } from '@/features/products/types/product';
+import ErrorState from '@/shared/components/ErrorState';
 import Loading from '@/shared/components/Loading';
 import PageHeader from '@/shared/components/PageHeader';
+import { getErrorMessage } from '@/shared/lib/getErrorMessage';
 
 import CartEmptyState from './CartEmptyState';
 import CartItemList from './CartItemList';
@@ -22,23 +24,37 @@ export default function CartPage() {
   );
 
   const [productList, setProductList] = useState<Product[] | null>(null);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const loadCartProductList = useCallback(async () => {
+    try {
+      setErrorMessage('');
+      const fetchedProducts = await getCartProductList(cart);
+      setProductList(fetchedProducts);
+    } catch (error) {
+      setErrorMessage(
+        getErrorMessage(
+          error,
+          'カート商品の取得に失敗しました。時間をおいて再試行してください。'
+        )
+      );
+      setProductList([]);
+    }
+  }, [cart]);
 
   useEffect(() => {
     if (!initialized) {
       return;
     }
 
-    (async () => {
-      const fetchedProducts = await getCartProductList(cart);
-      setProductList(fetchedProducts);
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialized]);
+    queueMicrotask(() => {
+      void loadCartProductList();
+    });
+  }, [initialized, loadCartProductList]);
 
   const currentProductList = useMemo(() => {
     return productList?.filter((product) => !!cart[product.id]) ?? [];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productList, Object.keys(cart).length]);
+  }, [productList, cart]);
 
   const totalPrice = useMemo(() => {
     return currentProductList.reduce(
@@ -47,7 +63,7 @@ export default function CartPage() {
     );
   }, [currentProductList, cart]);
 
-  if (!initialized || !productList) {
+  if (!initialized || productList === null) {
     return (
       <>
         <PageHeader
@@ -56,6 +72,22 @@ export default function CartPage() {
           badge="Cart"
         />
         <Loading />
+      </>
+    );
+  }
+
+  if (errorMessage) {
+    return (
+      <>
+        <PageHeader
+          title="カート"
+          description="選択した商品と数量、合計金額を確認できます。"
+          badge="Cart"
+        />
+        <ErrorState
+          description={errorMessage}
+          onRetry={() => void loadCartProductList()}
+        />
       </>
     );
   }

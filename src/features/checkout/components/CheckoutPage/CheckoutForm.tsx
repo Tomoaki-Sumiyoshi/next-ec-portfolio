@@ -10,6 +10,7 @@ import { OrderRequestParam } from '@/features/order/types/order';
 import { setOrder } from '@/features/order/usecase/setOrder';
 import { Product } from '@/features/products/types/product';
 import { ROUTES } from '@/shared/constants/routes';
+import { getErrorMessage } from '@/shared/lib/getErrorMessage';
 
 import CheckoutCustomerSection from './CheckoutCustomerSection';
 import CheckoutFormActions from './CheckoutFormActions';
@@ -23,6 +24,7 @@ type Props = {
 export default function CheckoutForm({ productList }: Props) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
+  const [submitErrorMessage, setSubmitErrorMessage] = useState('');
 
   const getProductQuantity = useCartStore((cartState) => cartState.getQuantity);
   const clearCart = useCartStore((cartState) => cartState.clear);
@@ -70,31 +72,43 @@ export default function CheckoutForm({ productList }: Props) {
     }
 
     setSubmitting(true);
+    setSubmitErrorMessage('');
 
-    const { fullName, email, postCode, addressLine1, addressLine2 } =
-      form.getValues();
+    try {
+      const { fullName, email, postCode, addressLine1, addressLine2 } =
+        form.getValues();
 
-    const orderRequest: OrderRequestParam = {
-      itemList: productList.map((product) => ({
-        productId: product.id,
-        quantity: getProductQuantity(product.id),
-        marketPrice: product.price,
-      })),
-      customer: {
-        fullName,
-        email,
-      },
-      shippingAddress: {
-        postCode,
-        addressLine1,
-        addressLine2,
-      },
-    };
+      const orderRequest: OrderRequestParam = {
+        itemList: productList.map((product) => ({
+          productId: product.id,
+          quantity: getProductQuantity(product.id),
+          marketPrice: product.price,
+        })),
+        customer: {
+          fullName,
+          email,
+        },
+        shippingAddress: {
+          postCode,
+          addressLine1,
+          addressLine2,
+        },
+      };
 
-    const createdOrder = await setOrder(orderRequest);
-    setCheckout(createdOrder.id);
-    await clearCart();
-    router.push(ROUTES.checkoutComplete);
+      const createdOrder = await setOrder(orderRequest);
+      await setCheckout(createdOrder.id);
+      await clearCart();
+      router.push(ROUTES.checkoutComplete);
+    } catch (error) {
+      setSubmitErrorMessage(
+        getErrorMessage(
+          error,
+          '注文の送信に失敗しました。通信状況を確認して、もう一度お試しください。'
+        )
+      );
+    } finally {
+      setSubmitting(false);
+    }
   });
 
   return (
@@ -110,6 +124,12 @@ export default function CheckoutForm({ productList }: Props) {
           <Alert title="デモフォーム" color="brand">
             入力内容は学習用のダミーデータとして扱われ、ブラウザ内にのみ保存されます。
           </Alert>
+
+          {submitErrorMessage && (
+            <Alert title="注文を完了できませんでした" color="red">
+              {submitErrorMessage}
+            </Alert>
+          )}
 
           <CheckoutFormActions submitting={submitting} />
         </Stack>

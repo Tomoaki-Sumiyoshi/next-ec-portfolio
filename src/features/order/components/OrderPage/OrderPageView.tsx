@@ -2,22 +2,26 @@
 
 import { Alert, Text } from '@mantine/core';
 import { IconReceiptOff } from '@tabler/icons-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { clearCheckout } from '@/features/checkout/usecase/clearCheckout';
 import { getCheckout } from '@/features/checkout/usecase/getCheckout';
 import { Order } from '@/features/order/types/order';
 import { getOrderList } from '@/features/order/usecase/getOrderList';
 import EmptyState from '@/shared/components/EmptyState';
+import ErrorState from '@/shared/components/ErrorState';
+import { getErrorMessage } from '@/shared/lib/getErrorMessage';
 
 import OrderHistoryList from './OrderHistoryList';
 
 export default function OrderPageView() {
   const [orderList, setOrderList] = useState<Order[] | null>(null);
   const [latestOrderId, setLatestOrderId] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  useEffect(() => {
-    (async () => {
+  const loadOrderList = useCallback(async () => {
+    try {
+      setErrorMessage('');
       const [checkoutOrderId, savedOrders] = await Promise.all([
         getCheckout(),
         getOrderList(),
@@ -35,8 +39,22 @@ export default function OrderPageView() {
       );
 
       setOrderList(sortedOrders);
-    })();
+    } catch (error) {
+      setErrorMessage(
+        getErrorMessage(
+          error,
+          '注文履歴を取得できませんでした。時間をおいて再試行してください。'
+        )
+      );
+      setOrderList([]);
+    }
   }, []);
+
+  useEffect(() => {
+    queueMicrotask(() => {
+      void loadOrderList();
+    });
+  }, [loadOrderList]);
 
   const latestOrder = useMemo(() => {
     if (!orderList || !latestOrderId) {
@@ -45,6 +63,15 @@ export default function OrderPageView() {
 
     return orderList.find((order) => order.id === latestOrderId) ?? null;
   }, [latestOrderId, orderList]);
+
+  if (errorMessage) {
+    return (
+      <ErrorState
+        description={errorMessage}
+        onRetry={() => void loadOrderList()}
+      />
+    );
+  }
 
   if (!orderList) {
     return (

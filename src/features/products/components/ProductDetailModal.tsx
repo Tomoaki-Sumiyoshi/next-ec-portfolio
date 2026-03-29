@@ -1,8 +1,10 @@
 'use client';
 
-import { Group, Image, Modal, Stack, Text } from '@mantine/core';
+import { Alert, Group, Image, Modal, Stack, Text } from '@mantine/core';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+
+import { getErrorMessage } from '@/shared/lib/getErrorMessage';
 
 import { Product } from '../schemas/product.schema';
 import { getProductById } from '../usecases/getProductById';
@@ -16,20 +18,28 @@ export default function ProductDetailModal() {
   const isOpened = !!productId;
 
   const [product, setProduct] = useState<Product | null>(null);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     (async () => {
       if (!productId) {
         setProduct(null);
+        setErrorMessage('');
         return;
       }
 
       try {
+        setErrorMessage('');
         const fetchedProduct = await getProductById(productId);
         setProduct(fetchedProduct);
       } catch (error) {
-        console.error('Failed to fetch product by id:', error);
         setProduct(null);
+        setErrorMessage(
+          getErrorMessage(
+            error,
+            '商品の詳細情報を取得できませんでした。時間をおいて再試行してください。'
+          )
+        );
       }
     })();
   }, [productId]);
@@ -46,14 +56,18 @@ export default function ProductDetailModal() {
 
   return (
     <Modal opened={isOpened} onClose={closeModal} title="商品詳細" centered>
-      {!product ? (
-        <Text size="sm">商品が見つかりません。</Text>
+      {errorMessage ? (
+        <Alert title="商品情報を読み込めませんでした" color="red">
+          {errorMessage}
+        </Alert>
+      ) : !product ? (
+        <Text size="sm">商品情報を読み込み中です。</Text>
       ) : (
         <Stack gap="sm">
           <Image src={product.imageUrl} alt={product.name} radius="md" />
           <Group justify="space-between" align="start">
             <Text fw={700}>{product.name}</Text>
-            <Text fw={700}>¥{product.price}</Text>
+            <Text fw={700}>¥{product.price.toLocaleString()}</Text>
           </Group>
           <Text size="sm" c="dimmed">
             {product.description}

@@ -3,25 +3,30 @@
 import { Anchor, Box, Card, Divider, Group, Stack, Text } from '@mantine/core';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { clearCheckout } from '@/features/checkout/usecase/clearCheckout';
 import { getCheckout } from '@/features/checkout/usecase/getCheckout';
 import { Order } from '@/features/order/types/order';
 import { getOrderById } from '@/features/order/usecase/getOrderById';
+import ErrorState from '@/shared/components/ErrorState';
 import PriceSummary from '@/shared/components/PriceSummary';
 import { ROUTES } from '@/shared/constants/routes';
+import { getErrorMessage } from '@/shared/lib/getErrorMessage';
 
 import OrderItemCard from './OrderItemCard';
 
 export default function CheckoutCompletePageView() {
   const router = useRouter();
   const [order, setOrder] = useState<Order>();
+  const [errorMessage, setErrorMessage] = useState('');
 
-  useEffect(() => {
-    (async () => {
+  const loadCheckoutOrder = useCallback(async () => {
+    try {
+      setErrorMessage('');
       const sessionId = await getCheckout();
       await clearCheckout();
+
       if (!sessionId) {
         router.push(ROUTES.home);
         return;
@@ -34,8 +39,21 @@ export default function CheckoutCompletePageView() {
       }
 
       setOrder(checkoutOrder);
-    })();
+    } catch (error) {
+      setErrorMessage(
+        getErrorMessage(
+          error,
+          '注文完了情報を取得できませんでした。時間をおいて再試行してください。'
+        )
+      );
+    }
   }, [router]);
+
+  useEffect(() => {
+    queueMicrotask(() => {
+      void loadCheckoutOrder();
+    });
+  }, [loadCheckoutOrder]);
 
   const subtotalPrice = useMemo(() => {
     return (
@@ -45,6 +63,15 @@ export default function CheckoutCompletePageView() {
       ) ?? 0
     );
   }, [order]);
+
+  if (errorMessage) {
+    return (
+      <ErrorState
+        description={errorMessage}
+        onRetry={() => void loadCheckoutOrder()}
+      />
+    );
+  }
 
   if (!order) {
     return (
