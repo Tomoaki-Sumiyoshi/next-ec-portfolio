@@ -94,7 +94,7 @@ export default function CheckoutFrom({ productList }: Props) {
     const order = await setOrder(requestParam);
     setCheckout(order.id);
     clear();
-    router.push('/checkout/complete');
+    router.push('/order');
   });
 
   return (
