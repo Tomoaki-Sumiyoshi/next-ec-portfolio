@@ -7,11 +7,10 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { clearCheckout } from '@/features/checkout/usecase/clearCheckout';
 import { getCheckout } from '@/features/checkout/usecase/getCheckout';
+import OrderPriceSummary from '@/features/order/components/OrderPriceSummary';
 import { Order } from '@/features/order/types/order';
 import { getOrderById } from '@/features/order/usecase/getOrderById';
-import { SHIPPING_FEE } from '@/shared/constants/commerce';
 import { ROUTES } from '@/shared/constants/routes';
-import { calculatePriceSummary } from '@/shared/lib/calculatePriceSummary';
 
 import OrderItemCard from './OrderItemCard';
 
@@ -47,10 +46,6 @@ export default function CheckoutCompletePageView() {
     );
   }, [order]);
 
-  const { consumptionTax, totalPrice } = useMemo(() => {
-    return calculatePriceSummary(subtotalPrice);
-  }, [subtotalPrice]);
-
   if (!order) {
     return (
       <Text size="sm" mt="sm">
@@ -77,25 +72,7 @@ export default function CheckoutCompletePageView() {
 
           <Divider />
 
-          <Stack gap={6}>
-            <Group justify="space-between">
-              <Text c="dimmed">小計</Text>
-              <Text>{subtotalPrice.toLocaleString()}円</Text>
-            </Group>
-            <Group justify="space-between">
-              <Text c="dimmed">送料</Text>
-              <Text>{SHIPPING_FEE.toLocaleString()}円</Text>
-            </Group>
-            <Group justify="space-between">
-              <Text c="dimmed">消費税 (10%)</Text>
-              <Text>{consumptionTax.toLocaleString()}円</Text>
-            </Group>
-            <Divider />
-            <Group justify="space-between">
-              <Text fw={700}>合計</Text>
-              <Text fw={700}>{totalPrice.toLocaleString()}円</Text>
-            </Group>
-          </Stack>
+          <OrderPriceSummary subtotalPrice={subtotalPrice} />
 
           <Group justify="space-between" mt="sm">
             <Anchor href={ROUTES.home} component={Link}>
