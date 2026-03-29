@@ -3,8 +3,8 @@
 import { Badge, Box, Card, Divider, Group, Stack, Text } from '@mantine/core';
 
 import OrderItemCard from '@/features/checkout/components/CheckoutCompletePage/OrderItemCard';
-import OrderPriceSummary from '@/features/order/components/OrderPriceSummary';
 import { Order } from '@/features/order/types/order';
+import PriceSummary from '@/shared/components/PriceSummary';
 
 import styles from './OrderPageView.module.scss';
 
@@ -53,7 +53,8 @@ export default function OrderHistoryCard({ order, isLatestOrder }: Props) {
             {order.customer.fullName} / {order.customer.email}
           </Text>
           <Text size="sm" className={styles.address}>
-            〒{order.shippingAddress.postCode} {order.shippingAddress.addressLine1}
+            〒{order.shippingAddress.postCode}{' '}
+            {order.shippingAddress.addressLine1}
             {order.shippingAddress.addressLine2
               ? ` ${order.shippingAddress.addressLine2}`
               : ''}
@@ -70,7 +71,7 @@ export default function OrderHistoryCard({ order, isLatestOrder }: Props) {
 
         <Divider />
 
-        <OrderPriceSummary subtotalPrice={subtotalPrice} />
+        <PriceSummary subtotalPrice={subtotalPrice} />
       </Stack>
     </Card>
   );

@@ -1,14 +1,16 @@
 'use client';
 
-import { Alert, Card, Stack, Text } from '@mantine/core';
+import { Alert, Text } from '@mantine/core';
+import { IconReceiptOff } from '@tabler/icons-react';
 import { useEffect, useMemo, useState } from 'react';
 
 import { clearCheckout } from '@/features/checkout/usecase/clearCheckout';
 import { getCheckout } from '@/features/checkout/usecase/getCheckout';
 import { Order } from '@/features/order/types/order';
 import { getOrderList } from '@/features/order/usecase/getOrderList';
+import EmptyState from '@/shared/components/EmptyState';
 
-import OrderHistoryCard from './OrderHistoryCard';
+import OrderHistoryList from './OrderHistoryList';
 
 export default function OrderPageView() {
   const [orderList, setOrderList] = useState<Order[] | null>(null);
@@ -27,8 +29,9 @@ export default function OrderPageView() {
       }
 
       const sortedOrders = [...savedOrders].sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        (leftOrder, rightOrder) =>
+          new Date(rightOrder.createdAt).getTime() -
+          new Date(leftOrder.createdAt).getTime()
       );
 
       setOrderList(sortedOrders);
@@ -53,29 +56,23 @@ export default function OrderPageView() {
 
   if (orderList.length === 0) {
     return (
-      <Card>
-        <Alert title="注文履歴がありません" color="gray">
-          購入が完了すると、この画面に注文内容が表示されます。
-        </Alert>
-      </Card>
+      <EmptyState
+        title="注文履歴がありません"
+        description="購入が完了すると、この画面に注文内容が表示されます。"
+        icon={<IconReceiptOff size={26} />}
+      />
     );
   }
 
   return (
-    <Stack gap="md">
+    <>
       {latestOrder && (
         <Alert title="決済が完了しました" color="green">
           最新の注文内容をこの画面で確認できます。
         </Alert>
       )}
 
-      {orderList.map((order) => (
-        <OrderHistoryCard
-          key={order.id}
-          order={order}
-          isLatestOrder={order.id === latestOrderId}
-        />
-      ))}
-    </Stack>
+      <OrderHistoryList orderList={orderList} latestOrderId={latestOrderId} />
+    </>
   );
 }

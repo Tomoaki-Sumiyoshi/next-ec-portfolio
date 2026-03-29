@@ -1,18 +1,18 @@
 'use client';
 
-import { Grid, ScrollArea, Stack, Text } from '@mantine/core';
+import { Grid, ScrollArea, Text } from '@mantine/core';
 import { useEffect, useMemo, useState } from 'react';
 
+import { useCartStore } from '@/features/cart/store/cart.store';
 import { getCartProductList } from '@/features/cart/usecases/getCartProductList';
 import { Product } from '@/features/products/types/product';
 import Loading from '@/shared/components/Loading';
 import PageHeader from '@/shared/components/PageHeader';
 
 import CartEmptyState from './CartEmptyState';
-import CartItemCard from './CartItemCard';
+import CartItemList from './CartItemList';
 import styles from './CartPage.module.scss';
 import CartSummary from './CartSummary';
-import { useCartStore } from '../../store/cart.store';
 
 export default function CartPage() {
   const initialized = useCartStore((cartState) => cartState.initialized);
@@ -89,11 +89,7 @@ export default function CartPage() {
       <Grid align="start" gutter={{ base: 'md', md: 'lg' }}>
         <Grid.Col span={{ base: 12, md: 8 }}>
           <ScrollArea.Autosize mah="auto">
-            <Stack gap="sm">
-              {currentProductList.map((product) => (
-                <CartItemCard key={product.id} product={product} />
-              ))}
-            </Stack>
+            <CartItemList productList={currentProductList} />
           </ScrollArea.Autosize>
         </Grid.Col>
 

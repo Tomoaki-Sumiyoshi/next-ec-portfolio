@@ -1,12 +1,14 @@
 'use client';
 
-import { Container, SimpleGrid, Text } from '@mantine/core';
+import { Container } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
-import ProductCard from './ProductCard';
+import { Product } from '@/features/products/types/product';
+import { getProductList } from '@/features/products/usecases/getProductList';
+
 import ProductDetailModal from './ProductDetailModal';
-import { Product } from '../types/product';
-import { getProductList } from '../usecases/getProductList';
+import ProductGrid from './ProductGrid';
+import ProductListEmptyState from './ProductListEmptyState';
 
 export default function ProductListPage() {
   const [productList, setProductList] = useState<Product[]>([]);
@@ -22,7 +24,7 @@ export default function ProductListPage() {
     return (
       <>
         <Container py={{ base: 'sm', sm: 'md' }} size="xl">
-          <Text c="dimmed">商品がありません</Text>
+          <ProductListEmptyState />
         </Container>
         <ProductDetailModal />
       </>
@@ -32,14 +34,7 @@ export default function ProductListPage() {
   return (
     <>
       <Container py={{ base: 'sm', sm: 'md' }} size="xl">
-        <SimpleGrid
-          cols={{ base: 1, xs: 2, md: 3, xl: 4 }}
-          spacing={{ base: 'sm', sm: 'md' }}
-        >
-          {productList.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </SimpleGrid>
+        <ProductGrid productList={productList} />
       </Container>
       <ProductDetailModal />
     </>

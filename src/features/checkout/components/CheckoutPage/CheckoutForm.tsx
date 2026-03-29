@@ -1,19 +1,7 @@
 'use client';
 
-import {
-  Alert,
-  Anchor,
-  Button,
-  Card,
-  Divider,
-  Grid,
-  Group,
-  Stack,
-  Text,
-  TextInput,
-} from '@mantine/core';
+import { Alert, Card, Divider, Stack } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -23,6 +11,9 @@ import { setOrder } from '@/features/order/usecase/setOrder';
 import { Product } from '@/features/products/types/product';
 import { ROUTES } from '@/shared/constants/routes';
 
+import CheckoutCustomerSection from './CheckoutCustomerSection';
+import CheckoutFormActions from './CheckoutFormActions';
+import CheckoutPaymentSection from './CheckoutPaymentSection';
 import { setCheckout } from '../../usecase/setCheckout';
 
 type Props = {
@@ -110,90 +101,17 @@ export default function CheckoutForm({ productList }: Props) {
     <Card>
       <form onSubmit={onSubmit}>
         <Stack gap="lg">
-          <Stack gap={4}>
-            <Text fw={700}>お届け先情報</Text>
-            <Text size="sm" c="dimmed">
-              注文内容の確認画面に表示される配送先情報です。
-            </Text>
-          </Stack>
-
-          <TextInput
-            label="氏名"
-            placeholder="山田 太郎"
-            {...form.getInputProps('fullName')}
-          />
-          <TextInput
-            label="メールアドレス"
-            placeholder="taro@example.com"
-            {...form.getInputProps('email')}
-          />
-          <TextInput
-            label="郵便番号"
-            placeholder="123-4567"
-            {...form.getInputProps('postCode')}
-          />
-          <TextInput
-            label="住所"
-            placeholder="東京都渋谷区..."
-            {...form.getInputProps('addressLine1')}
-          />
-          <TextInput
-            label="建物名・部屋番号"
-            placeholder="サンプルマンション 101"
-            {...form.getInputProps('addressLine2')}
-          />
+          <CheckoutCustomerSection form={form} />
 
           <Divider />
 
-          <Stack gap={4}>
-            <Text fw={700}>お支払い情報</Text>
-            <Text size="sm" c="dimmed">
-              ポートフォリオ用の疑似入力です。実際の決済は行いません。
-            </Text>
-          </Stack>
+          <CheckoutPaymentSection form={form} />
 
-          <TextInput
-            label="カード番号"
-            placeholder="4242 4242 4242 4242"
-            inputMode="numeric"
-            {...form.getInputProps('cardNumber')}
-          />
-
-          <Grid gutter="sm">
-            <Grid.Col span={{ base: 12, xs: 6 }}>
-              <TextInput
-                label="有効期限"
-                placeholder="MM/YY"
-                {...form.getInputProps('cardExpiry')}
-              />
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, xs: 6 }}>
-              <TextInput
-                label="CVC"
-                placeholder="123"
-                inputMode="numeric"
-                {...form.getInputProps('cardCvc')}
-              />
-            </Grid.Col>
-          </Grid>
-
-          <Alert title="テスト用フォーム" color="brand">
-            入力内容は学習用のデモデータとして扱われ、ブラウザ内にのみ保存されます。
+          <Alert title="デモフォーム" color="brand">
+            入力内容は学習用のダミーデータとして扱われ、ブラウザ内にのみ保存されます。
           </Alert>
 
-          <Group justify="space-between" align="center" mt="xs" wrap="wrap">
-            <Anchor component={Link} href={ROUTES.cart}>
-              カートへ戻る
-            </Anchor>
-            <Button
-              type="submit"
-              loading={submitting}
-              color="brand"
-              w={{ base: '100%', xs: 'auto' }}
-            >
-              注文を確定する
-            </Button>
-          </Group>
+          <CheckoutFormActions submitting={submitting} />
         </Stack>
       </form>
     </Card>

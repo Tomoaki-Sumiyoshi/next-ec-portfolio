@@ -1,15 +1,14 @@
 'use client';
 
-import { Alert, Anchor, Card, Grid } from '@mantine/core';
-import Link from 'next/link';
+import { Grid } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
 import { useCartStore } from '@/features/cart/store/cart.store';
 import { getCartProductList } from '@/features/cart/usecases/getCartProductList';
 import { Product } from '@/features/products/types/product';
 import Loading from '@/shared/components/Loading';
-import { ROUTES } from '@/shared/constants/routes';
 
+import CheckoutEmptyState from './CheckoutEmptyState';
 import CheckoutForm from './CheckoutForm';
 import styles from './CheckoutPageView.module.scss';
 import CheckoutSummary from './CheckoutSummary';
@@ -37,16 +36,7 @@ export default function CheckoutPageView() {
   }
 
   if (productList.length === 0) {
-    return (
-      <Card>
-        <Alert title="カートが空です" color="red">
-          購入手続きを進めるには、先に商品をカートへ追加してください。
-        </Alert>
-        <Anchor component={Link} href={ROUTES.home}>
-          商品一覧へ戻る
-        </Anchor>
-      </Card>
-    );
+    return <CheckoutEmptyState />;
   }
 
   return (

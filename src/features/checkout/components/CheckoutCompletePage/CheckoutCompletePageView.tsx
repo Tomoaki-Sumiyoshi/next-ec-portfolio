@@ -7,9 +7,9 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { clearCheckout } from '@/features/checkout/usecase/clearCheckout';
 import { getCheckout } from '@/features/checkout/usecase/getCheckout';
-import OrderPriceSummary from '@/features/order/components/OrderPriceSummary';
 import { Order } from '@/features/order/types/order';
 import { getOrderById } from '@/features/order/usecase/getOrderById';
+import PriceSummary from '@/shared/components/PriceSummary';
 import { ROUTES } from '@/shared/constants/routes';
 
 import OrderItemCard from './OrderItemCard';
@@ -72,7 +72,7 @@ export default function CheckoutCompletePageView() {
 
           <Divider />
 
-          <OrderPriceSummary subtotalPrice={subtotalPrice} />
+          <PriceSummary subtotalPrice={subtotalPrice} />
 
           <Group justify="space-between" mt="sm">
             <Anchor href={ROUTES.home} component={Link}>
