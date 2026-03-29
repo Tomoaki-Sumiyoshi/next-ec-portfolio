@@ -1,5 +1,7 @@
 import { Badge, Box, Divider, Group, Stack, Text, Title } from '@mantine/core';
 
+import styles from './PageHeader.module.scss';
+
 type Props = {
   title: string;
   description?: string;
@@ -14,9 +16,9 @@ export default function PageHeader({
   action,
 }: Props) {
   return (
-    <Stack gap="md">
-      <Group justify="space-between" align="flex-end">
-        <Box>
+    <Stack gap="md" className={styles.root}>
+      <Group justify="space-between" align="flex-end" wrap="wrap" className={styles.row}>
+        <Box className={styles.heading}>
           <Group gap="sm" mb={description ? 6 : 0}>
             <Title order={2}>{title}</Title>
             {badge && <Badge variant="light">{badge}</Badge>}
@@ -27,7 +29,7 @@ export default function PageHeader({
             </Text>
           )}
         </Box>
-        {action}
+        {action && <Box className={styles.action}>{action}</Box>}
       </Group>
 
       <Divider />

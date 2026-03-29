@@ -1,0 +1,22 @@
+.root {
+  gap: var(--mantine-spacing-md);
+}
+
+.row {
+  gap: var(--mantine-spacing-md);
+}
+
+.heading {
+  min-width: 0;
+}
+
+.action {
+  width: 100%;
+}
+
+@media (min-width: 48em) {
+  .action {
+    width: auto;
+    max-width: min(420px, 100%);
+  }
+}

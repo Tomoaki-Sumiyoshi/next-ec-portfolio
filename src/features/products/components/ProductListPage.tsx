@@ -21,7 +21,7 @@ export default function ProductListPage() {
   if (productList.length === 0) {
     return (
       <>
-        <Container py="md">
+        <Container py={{ base: 'sm', sm: 'md' }} size="xl">
           <Text c="dimmed">商品がありません</Text>
         </Container>
         <ProductDetailModal />
@@ -31,8 +31,11 @@ export default function ProductListPage() {
 
   return (
     <>
-      <Container py="md">
-        <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="md">
+      <Container py={{ base: 'sm', sm: 'md' }} size="xl">
+        <SimpleGrid
+          cols={{ base: 1, xs: 2, md: 3, xl: 4 }}
+          spacing={{ base: 'sm', sm: 'md' }}
+        >
           {productList.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

@@ -1,19 +1,20 @@
 'use client';
 
-import { Alert, Anchor, Card, Grid, Text } from '@mantine/core';
+import { Alert, Anchor, Card, Grid } from '@mantine/core';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import { useCartStore } from '@/features/cart/store/cart.store';
 import { Product } from '@/features/products/types/product';
 import { getProductListByIds } from '@/features/products/usecases/getProductListByIds';
+import Loading from '@/shared/components/Loading';
 
 import CheckoutForm from './CheckoutForm';
+import styles from './CheckoutPageView.module.scss';
 import CheckoutSummary from './CheckoutSummary';
 
 export default function CheckoutPageView() {
   const initialized = useCartStore((s) => s.initialized);
-
   const cart = useCartStore((s) => s.cart);
 
   const [productList, setProductList] = useState<Product[] | null>(null);
@@ -29,40 +30,36 @@ export default function CheckoutPageView() {
         setProductList([]);
         return;
       }
-      const data = await getProductListByIds(ids);
 
+      const data = await getProductListByIds(ids);
       setProductList(data);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialized]);
 
   if (!initialized || !productList) {
-    return (
-      <Text size="sm" mt="sm">
-        読み込み中...
-      </Text>
-    );
+    return <Loading />;
   }
 
-  if (productList.length == 0) {
+  if (productList.length === 0) {
     return (
-      <Card withBorder radius="md">
+      <Card>
         <Alert title="カートが空です" color="red">
-          決済を行うには、商品をカートに追加してください。
+          購入手続きを進めるには、先に商品をカートへ追加してください。
         </Alert>
         <Anchor component={Link} href="/">
-          商品一覧へ
+          商品一覧へ戻る
         </Anchor>
       </Card>
     );
   }
 
   return (
-    <Grid align="start">
+    <Grid align="start" gutter={{ base: 'md', md: 'lg' }}>
       <Grid.Col span={{ base: 12, md: 8 }}>
         <CheckoutForm productList={productList} />
       </Grid.Col>
-      <Grid.Col span={{ base: 12, md: 4 }}>
+      <Grid.Col span={{ base: 12, md: 4 }} className={styles.summaryColumn}>
         <CheckoutSummary productList={productList} />
       </Grid.Col>
     </Grid>

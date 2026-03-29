@@ -119,7 +119,7 @@ export default function CartPage() {
         }
       />
 
-      <Grid align="start" gutter="lg">
+      <Grid align="start" gutter={{ base: 'md', md: 'lg' }}>
         <Grid.Col span={{ base: 12, md: 8 }}>
           <ScrollArea.Autosize mah="auto">
             <Stack gap="sm">
@@ -130,7 +130,7 @@ export default function CartPage() {
           </ScrollArea.Autosize>
         </Grid.Col>
 
-        <Grid.Col span={{ base: 12, md: 4 }} pos="sticky" top={88}>
+        <Grid.Col span={{ base: 12, md: 4 }} className={styles.summaryColumn}>
           <CartSummary totalPrice={totalPrice} />
         </Grid.Col>
       </Grid>

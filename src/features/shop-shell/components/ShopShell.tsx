@@ -14,6 +14,7 @@ export default function ShopShell({ children }: { children: React.ReactNode }) {
     <AppShell
       header={{ height: 64 }}
       navbar={{ width: 280, breakpoint: 'md', collapsed: { mobile: !opened } }}
+      padding={{ base: 'sm', sm: 'md', lg: 'lg' }}
     >
       <ShopHeader opened={opened} onToggle={toggle} />
 

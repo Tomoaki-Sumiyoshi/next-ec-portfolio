@@ -1,0 +1,16 @@
+.cardHeader {
+  gap: var(--mantine-spacing-sm);
+}
+
+.orderInfo {
+  min-width: 0;
+  flex: 1;
+}
+
+.orderId {
+  overflow-wrap: anywhere;
+}
+
+.address {
+  overflow-wrap: anywhere;
+}

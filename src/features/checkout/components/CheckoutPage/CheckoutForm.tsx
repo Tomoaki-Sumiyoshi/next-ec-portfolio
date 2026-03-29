@@ -6,6 +6,7 @@ import {
   Button,
   Card,
   Divider,
+  Grid,
   Group,
   Stack,
   Text,
@@ -111,7 +112,7 @@ export default function CheckoutForm({ productList }: Props) {
           <Stack gap={4}>
             <Text fw={700}>お届け先情報</Text>
             <Text size="sm" c="dimmed">
-              注文完了後の確認画面に表示される内容です。
+              注文内容の確認画面に表示される配送先情報です。
             </Text>
           </Stack>
 
@@ -157,29 +158,38 @@ export default function CheckoutForm({ productList }: Props) {
             {...form.getInputProps('cardNumber')}
           />
 
-          <Group grow>
-            <TextInput
-              label="有効期限"
-              placeholder="MM/YY"
-              {...form.getInputProps('cardExpiry')}
-            />
-            <TextInput
-              label="CVC"
-              placeholder="123"
-              inputMode="numeric"
-              {...form.getInputProps('cardCvc')}
-            />
-          </Group>
+          <Grid gutter="sm">
+            <Grid.Col span={{ base: 12, xs: 6 }}>
+              <TextInput
+                label="有効期限"
+                placeholder="MM/YY"
+                {...form.getInputProps('cardExpiry')}
+              />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, xs: 6 }}>
+              <TextInput
+                label="CVC"
+                placeholder="123"
+                inputMode="numeric"
+                {...form.getInputProps('cardCvc')}
+              />
+            </Grid.Col>
+          </Grid>
 
           <Alert title="テスト用フォーム" color="brand">
             入力内容は学習用のデモデータとして扱われ、ブラウザ内にのみ保存されます。
           </Alert>
 
-          <Group justify="space-between" align="center" mt="xs">
+          <Group justify="space-between" align="center" mt="xs" wrap="wrap">
             <Anchor component={Link} href="/cart">
               カートへ戻る
             </Anchor>
-            <Button type="submit" loading={submitting} color="brand">
+            <Button
+              type="submit"
+              loading={submitting}
+              color="brand"
+              w={{ base: '100%', xs: 'auto' }}
+            >
               注文を確定する
             </Button>
           </Group>

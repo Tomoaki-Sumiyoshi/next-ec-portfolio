@@ -18,6 +18,8 @@ import { getCheckout } from '@/features/checkout/usecase/getCheckout';
 import { Order } from '@/features/order/types/order';
 import { getOrderList } from '@/features/order/usecase/getOrderList';
 
+import styles from './OrderPageView.module.scss';
+
 const POSTAGE = 500;
 const TAX_RATE = 0.1;
 
@@ -79,9 +81,9 @@ export default function OrderPageView() {
 
   if (orderList.length === 0) {
     return (
-      <Card withBorder radius="md">
+      <Card>
         <Alert title="注文履歴がありません" color="gray">
-          決済が完了すると、この画面に注文内容が表示されます。
+          購入が完了すると、この画面に注文内容が表示されます。
         </Alert>
       </Card>
     );
@@ -91,7 +93,7 @@ export default function OrderPageView() {
     <Stack gap="md">
       {latestOrder && (
         <Alert title="決済が完了しました" color="green">
-          ご注文ありがとうございました。注文内容を確認できます。
+          最新の注文内容をこの画面で確認できます。
         </Alert>
       )}
 
@@ -101,12 +103,19 @@ export default function OrderPageView() {
         const isLatestOrder = order.id === latestOrderId;
 
         return (
-          <Card key={order.id} withBorder radius="md">
+          <Card key={order.id}>
             <Stack gap="md">
-              <Group justify="space-between" align="flex-start">
-                <Box>
+              <Group
+                justify="space-between"
+                align="flex-start"
+                wrap="wrap"
+                className={styles.cardHeader}
+              >
+                <Box className={styles.orderInfo}>
                   <Group gap="xs">
-                    <Text fw={700}>注文番号: {order.id}</Text>
+                    <Text fw={700} className={styles.orderId}>
+                      注文番号: {order.id}
+                    </Text>
                     {isLatestOrder && <Badge color="green">最新の注文</Badge>}
                   </Group>
                   <Text size="sm" c="dimmed">
@@ -122,8 +131,9 @@ export default function OrderPageView() {
                 <Text size="sm">
                   {order.customer.fullName} / {order.customer.email}
                 </Text>
-                <Text size="sm">
-                  〒{order.shippingAddress.postCode} {order.shippingAddress.addressLine1}
+                <Text size="sm" className={styles.address}>
+                  〒{order.shippingAddress.postCode}{' '}
+                  {order.shippingAddress.addressLine1}
                   {order.shippingAddress.addressLine2
                     ? ` ${order.shippingAddress.addressLine2}`
                     : ''}
@@ -141,20 +151,20 @@ export default function OrderPageView() {
               <Divider />
 
               <Stack gap={6}>
-                <Group justify="space-between">
+                <Group justify="space-between" wrap="wrap">
                   <Text c="dimmed">小計</Text>
                   <Text>{subtotalPrice.toLocaleString()}円</Text>
                 </Group>
-                <Group justify="space-between">
+                <Group justify="space-between" wrap="wrap">
                   <Text c="dimmed">送料</Text>
                   <Text>{POSTAGE.toLocaleString()}円</Text>
                 </Group>
-                <Group justify="space-between">
+                <Group justify="space-between" wrap="wrap">
                   <Text c="dimmed">消費税 (10%)</Text>
                   <Text>{consumptionTax.toLocaleString()}円</Text>
                 </Group>
                 <Divider />
-                <Group justify="space-between">
+                <Group justify="space-between" wrap="wrap">
                   <Text fw={700}>合計</Text>
                   <Text fw={700}>{totalPrice.toLocaleString()}円</Text>
                 </Group>
