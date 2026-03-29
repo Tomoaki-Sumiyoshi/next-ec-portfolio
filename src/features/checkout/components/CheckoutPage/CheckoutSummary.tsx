@@ -15,7 +15,8 @@ import { useMemo } from 'react';
 
 import { useCartStore } from '@/features/cart/store/cart.store';
 import { Product } from '@/features/products/types/product';
-import { SHIPPING_FEE, TAX_RATE } from '@/shared/constants/commerce';
+import { SHIPPING_FEE } from '@/shared/constants/commerce';
+import { calculatePriceSummary } from '@/shared/lib/calculatePriceSummary';
 
 type Props = {
   productList: Product[];
@@ -34,13 +35,9 @@ export default function CheckoutSummary({ productList }: Props) {
     );
   }, [productList, getProductQuantity]);
 
-  const consumptionTax = useMemo(() => {
-    return subtotalPrice * TAX_RATE;
+  const { consumptionTax, totalPrice } = useMemo(() => {
+    return calculatePriceSummary(subtotalPrice);
   }, [subtotalPrice]);
-
-  const totalPrice = useMemo(() => {
-    return subtotalPrice + SHIPPING_FEE + consumptionTax;
-  }, [subtotalPrice, consumptionTax]);
 
   return (
     <Card>

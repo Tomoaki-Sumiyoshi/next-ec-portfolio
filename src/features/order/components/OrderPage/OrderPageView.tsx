@@ -17,7 +17,8 @@ import { clearCheckout } from '@/features/checkout/usecase/clearCheckout';
 import { getCheckout } from '@/features/checkout/usecase/getCheckout';
 import { Order } from '@/features/order/types/order';
 import { getOrderList } from '@/features/order/usecase/getOrderList';
-import { SHIPPING_FEE, TAX_RATE } from '@/shared/constants/commerce';
+import { SHIPPING_FEE } from '@/shared/constants/commerce';
+import { calculatePriceSummary } from '@/shared/lib/calculatePriceSummary';
 
 import styles from './OrderPageView.module.scss';
 
@@ -26,8 +27,7 @@ function calculateOrderPriceSummary(order: Order) {
     (sum, item) => sum + item.marketPrice * item.quantity,
     0
   );
-  const consumptionTax = subtotalPrice * TAX_RATE;
-  const totalPrice = subtotalPrice + SHIPPING_FEE + consumptionTax;
+  const { consumptionTax, totalPrice } = calculatePriceSummary(subtotalPrice);
 
   return {
     subtotalPrice,

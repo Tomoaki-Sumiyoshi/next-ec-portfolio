@@ -9,8 +9,9 @@ import { clearCheckout } from '@/features/checkout/usecase/clearCheckout';
 import { getCheckout } from '@/features/checkout/usecase/getCheckout';
 import { Order } from '@/features/order/types/order';
 import { getOrderById } from '@/features/order/usecase/getOrderById';
-import { SHIPPING_FEE, TAX_RATE } from '@/shared/constants/commerce';
+import { SHIPPING_FEE } from '@/shared/constants/commerce';
 import { ROUTES } from '@/shared/constants/routes';
+import { calculatePriceSummary } from '@/shared/lib/calculatePriceSummary';
 
 import OrderItemCard from './OrderItemCard';
 
@@ -39,18 +40,16 @@ export default function CheckoutCompletePageView() {
 
   const subtotalPrice = useMemo(() => {
     return (
-      order?.itemList.reduce((sum, item) => sum + item.marketPrice * item.quantity, 0) ??
-      0
+      order?.itemList.reduce(
+        (sum, item) => sum + item.marketPrice * item.quantity,
+        0
+      ) ?? 0
     );
   }, [order]);
 
-  const consumptionTax = useMemo(() => {
-    return subtotalPrice * TAX_RATE;
+  const { consumptionTax, totalPrice } = useMemo(() => {
+    return calculatePriceSummary(subtotalPrice);
   }, [subtotalPrice]);
-
-  const totalPrice = useMemo(() => {
-    return subtotalPrice + SHIPPING_FEE + consumptionTax;
-  }, [subtotalPrice, consumptionTax]);
 
   if (!order) {
     return (

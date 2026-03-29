@@ -12,8 +12,8 @@ import { IconShoppingCart } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 
+import { getCartProductList } from '@/features/cart/usecases/getCartProductList';
 import { Product } from '@/features/products/types/product';
-import { getProductListByIds } from '@/features/products/usecases/getProductListByIds';
 import Loading from '@/shared/components/Loading';
 import PageHeader from '@/shared/components/PageHeader';
 import { ROUTES } from '@/shared/constants/routes';
@@ -38,13 +38,7 @@ export default function CartPage() {
     }
 
     (async () => {
-      const productIds = Object.keys(cart);
-      if (productIds.length === 0) {
-        setProductList([]);
-        return;
-      }
-
-      const fetchedProducts = await getProductListByIds(productIds);
+      const fetchedProducts = await getCartProductList(cart);
       setProductList(fetchedProducts);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps

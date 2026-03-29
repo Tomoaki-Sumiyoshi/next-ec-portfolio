@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import { useCartStore } from '@/features/cart/store/cart.store';
+import { getCartProductList } from '@/features/cart/usecases/getCartProductList';
 import { Product } from '@/features/products/types/product';
-import { getProductListByIds } from '@/features/products/usecases/getProductListByIds';
 import Loading from '@/shared/components/Loading';
 import { ROUTES } from '@/shared/constants/routes';
 
@@ -26,13 +26,7 @@ export default function CheckoutPageView() {
     }
 
     (async () => {
-      const productIds = Object.keys(cart);
-      if (productIds.length === 0) {
-        setProductList([]);
-        return;
-      }
-
-      const fetchedProducts = await getProductListByIds(productIds);
+      const fetchedProducts = await getCartProductList(cart);
       setProductList(fetchedProducts);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
