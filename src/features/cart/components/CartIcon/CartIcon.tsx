@@ -5,6 +5,8 @@ import { IconShoppingCart } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useEffect } from 'react';
 
+import { ROUTES } from '@/shared/constants/routes';
+
 import { useCartStore } from '../../store/cart.store';
 
 export default function CartIcon() {
@@ -20,7 +22,7 @@ export default function CartIcon() {
     return (
       <ActionIcon
         component={Link}
-        href="/cart"
+        href={ROUTES.cart}
         variant="light"
         color="brand"
         size="xl"
@@ -44,7 +46,7 @@ export default function CartIcon() {
     >
       <ActionIcon
         component={Link}
-        href="/cart"
+        href={ROUTES.cart}
         variant="light"
         color="brand"
         size="xl"

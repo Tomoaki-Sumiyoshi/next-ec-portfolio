@@ -21,6 +21,7 @@ import { useCartStore } from '@/features/cart/store/cart.store';
 import { OrderRequestParam } from '@/features/order/types/order';
 import { setOrder } from '@/features/order/usecase/setOrder';
 import { Product } from '@/features/products/types/product';
+import { ROUTES } from '@/shared/constants/routes';
 
 import { setCheckout } from '../../usecase/setCheckout';
 
@@ -102,7 +103,7 @@ export default function CheckoutForm({ productList }: Props) {
     const order = await setOrder(requestParam);
     setCheckout(order.id);
     await clear();
-    router.push('/checkout/complete');
+    router.push(ROUTES.checkoutComplete);
   });
 
   return (
@@ -181,7 +182,7 @@ export default function CheckoutForm({ productList }: Props) {
           </Alert>
 
           <Group justify="space-between" align="center" mt="xs" wrap="wrap">
-            <Anchor component={Link} href="/cart">
+            <Anchor component={Link} href={ROUTES.cart}>
               カートへ戻る
             </Anchor>
             <Button

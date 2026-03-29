@@ -16,6 +16,7 @@ import { Product } from '@/features/products/types/product';
 import { getProductListByIds } from '@/features/products/usecases/getProductListByIds';
 import Loading from '@/shared/components/Loading';
 import PageHeader from '@/shared/components/PageHeader';
+import { ROUTES } from '@/shared/constants/routes';
 
 import CartItemCard from './CartItemCard';
 import styles from './CartPage.module.scss';
@@ -98,7 +99,7 @@ export default function CartPage() {
               商品を追加すると、ここに購入予定の商品が表示されます。
             </Text>
           </Stack>
-          <Button component={Link} href="/">
+          <Button component={Link} href={ROUTES.home}>
             商品一覧へ戻る
           </Button>
         </Stack>

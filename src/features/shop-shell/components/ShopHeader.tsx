@@ -4,6 +4,7 @@ import { Anchor, AppShell, Burger, Group, Paper, Text } from '@mantine/core';
 import Link from 'next/link';
 
 import { CartIcon } from '@/features/cart/components/CartIcon';
+import { ROUTES } from '@/shared/constants/routes';
 
 import styles from './ShopHeader.module.scss';
 
@@ -24,7 +25,7 @@ export default function ShopHeader({ opened, onToggle }: Props) {
             size="sm"
           />
 
-          <Anchor component={Link} href="/" underline="never">
+          <Anchor component={Link} href={ROUTES.home} underline="never">
             <Paper py={8} px="sm" radius="xl" bg="white">
               <Text fw={800} c="brand.7" lh={1}>
                 PORTFOLIO EC

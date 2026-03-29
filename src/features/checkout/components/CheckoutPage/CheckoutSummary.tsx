@@ -15,13 +15,11 @@ import { useMemo } from 'react';
 
 import { useCartStore } from '@/features/cart/store/cart.store';
 import { Product } from '@/features/products/types/product';
+import { SHIPPING_FEE, TAX_RATE } from '@/shared/constants/commerce';
 
 type Props = {
   productList: Product[];
 };
-
-const POSTAGE = 500;
-const TAX_RATE = 0.1;
 
 export default function CheckoutSummary({ productList }: Props) {
   const getQuantity = useCartStore((s) => s.getQuantity);
@@ -38,7 +36,7 @@ export default function CheckoutSummary({ productList }: Props) {
   }, [subtotalPrice]);
 
   const totalPrice = useMemo(() => {
-    return subtotalPrice + POSTAGE + consumptionTax;
+    return subtotalPrice + SHIPPING_FEE + consumptionTax;
   }, [subtotalPrice, consumptionTax]);
 
   return (
@@ -97,7 +95,7 @@ export default function CheckoutSummary({ productList }: Props) {
           </Group>
           <Group justify="space-between">
             <Text c="dimmed">送料</Text>
-            <Text>{POSTAGE.toLocaleString()}円</Text>
+            <Text>{SHIPPING_FEE.toLocaleString()}円</Text>
           </Group>
           <Group justify="space-between">
             <Text c="dimmed">消費税 (10%)</Text>

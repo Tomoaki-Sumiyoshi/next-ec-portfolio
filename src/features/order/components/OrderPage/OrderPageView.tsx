@@ -17,11 +17,9 @@ import { clearCheckout } from '@/features/checkout/usecase/clearCheckout';
 import { getCheckout } from '@/features/checkout/usecase/getCheckout';
 import { Order } from '@/features/order/types/order';
 import { getOrderList } from '@/features/order/usecase/getOrderList';
+import { SHIPPING_FEE, TAX_RATE } from '@/shared/constants/commerce';
 
 import styles from './OrderPageView.module.scss';
-
-const POSTAGE = 500;
-const TAX_RATE = 0.1;
 
 function getPriceSummary(order: Order) {
   const subtotalPrice = order.itemList.reduce(
@@ -29,7 +27,7 @@ function getPriceSummary(order: Order) {
     0
   );
   const consumptionTax = subtotalPrice * TAX_RATE;
-  const totalPrice = subtotalPrice + POSTAGE + consumptionTax;
+  const totalPrice = subtotalPrice + SHIPPING_FEE + consumptionTax;
 
   return {
     subtotalPrice,
@@ -157,7 +155,7 @@ export default function OrderPageView() {
                 </Group>
                 <Group justify="space-between" wrap="wrap">
                   <Text c="dimmed">送料</Text>
-                  <Text>{POSTAGE.toLocaleString()}円</Text>
+                  <Text>{SHIPPING_FEE.toLocaleString()}円</Text>
                 </Group>
                 <Group justify="space-between" wrap="wrap">
                   <Text c="dimmed">消費税 (10%)</Text>

@@ -8,6 +8,7 @@ import { useCartStore } from '@/features/cart/store/cart.store';
 import { Product } from '@/features/products/types/product';
 import { getProductListByIds } from '@/features/products/usecases/getProductListByIds';
 import Loading from '@/shared/components/Loading';
+import { ROUTES } from '@/shared/constants/routes';
 
 import CheckoutForm from './CheckoutForm';
 import styles from './CheckoutPageView.module.scss';
@@ -47,7 +48,7 @@ export default function CheckoutPageView() {
         <Alert title="カートが空です" color="red">
           購入手続きを進めるには、先に商品をカートへ追加してください。
         </Alert>
-        <Anchor component={Link} href="/">
+        <Anchor component={Link} href={ROUTES.home}>
           商品一覧へ戻る
         </Anchor>
       </Card>

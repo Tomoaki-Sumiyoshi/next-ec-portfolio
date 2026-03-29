@@ -4,6 +4,8 @@ import { AppShell, NavLink } from '@mantine/core';
 import { IconHistory } from '@tabler/icons-react';
 import Link from 'next/link';
 
+import { ROUTES } from '@/shared/constants/routes';
+
 import styles from './ShopNavbar.module.scss';
 
 type Props = {
@@ -15,8 +17,8 @@ export default function ShopNavbar({ onNavigate }: Props) {
     <AppShell.Navbar p="md" className={styles.navbar}>
       <NavLink
         component={Link}
-        href="/order"
-        label="購入履歴"
+        href={ROUTES.order}
+        label="雉ｼ蜈･螻･豁ｴ"
         leftSection={<IconHistory size={16} />}
         onClick={onNavigate}
         variant="light"
