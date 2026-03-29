@@ -1,4 +1,5 @@
-import { Paper, Title, Text, Divider, Group, Button } from '@mantine/core';
+import { Button, Divider, Group, Paper, Stack, Text, ThemeIcon } from '@mantine/core';
+import { IconReceipt2 } from '@tabler/icons-react';
 import Link from 'next/link';
 
 type Props = {
@@ -7,22 +8,37 @@ type Props = {
 
 export default function CartSummary({ totalPrice }: Props) {
   return (
-    <Paper withBorder p="md" radius="md">
-      <Title order={4}>注文</Title>
-      <Divider my="sm" />
+    <Paper>
+      <Stack gap="md">
+        <Group gap="sm">
+          <ThemeIcon variant="light" color="brand" size={40} radius="xl">
+            <IconReceipt2 size={20} />
+          </ThemeIcon>
+          <Stack gap={0}>
+            <Text fw={700}>ご請求サマリー</Text>
+            <Text size="sm" c="dimmed">
+              購入予定の商品と金額を確認できます。
+            </Text>
+          </Stack>
+        </Group>
 
-      <Group justify="space-between">
-        <Text size="sm">合計</Text>
-        <Text fw={700}>¥{totalPrice.toLocaleString()}</Text>
-      </Group>
+        <Divider />
 
-      <Button fullWidth mt="md" component={Link} href="/checkout">
-        レジに進む
-      </Button>
+        <Group justify="space-between">
+          <Text size="sm" c="dimmed">
+            小計
+          </Text>
+          <Text fw={700}>{totalPrice.toLocaleString()}円</Text>
+        </Group>
 
-      <Button fullWidth mt="xs" variant="default" component={Link} href="/">
-        買い物を続ける
-      </Button>
+        <Button fullWidth component={Link} href="/checkout" color="brand">
+          購入手続きへ進む
+        </Button>
+
+        <Button fullWidth variant="default" component={Link} href="/">
+          商品一覧へ戻る
+        </Button>
+      </Stack>
     </Paper>
   );
 }

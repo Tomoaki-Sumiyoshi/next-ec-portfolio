@@ -1,18 +1,17 @@
 'use client';
 
-import { Divider, Group, Title } from '@mantine/core';
+import PageHeader from '@/shared/components/PageHeader';
 
 import CheckoutPageView from './CheckoutPageView';
 
 export default function CheckoutPage() {
   return (
     <>
-      <Group justify="space-between" align="flex-end">
-        <Title order={2}>お支払い</Title>
-      </Group>
-
-      <Divider my="md" />
-
+      <PageHeader
+        title="お支払い"
+        description="配送先とお支払い情報を入力して、注文内容を確認します。"
+        badge="Checkout"
+      />
       <CheckoutPageView />
     </>
   );

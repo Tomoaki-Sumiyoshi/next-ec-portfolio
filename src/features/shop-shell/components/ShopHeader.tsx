@@ -1,8 +1,11 @@
 'use client';
 
-import { Anchor, AppShell, Burger, Group, Image } from '@mantine/core';
+import { Anchor, AppShell, Burger, Group, Paper, Text } from '@mantine/core';
+import Link from 'next/link';
 
 import { CartIcon } from '@/features/cart/components/CartIcon';
+
+import styles from './ShopHeader.module.scss';
 
 type Props = {
   opened: boolean;
@@ -11,9 +14,8 @@ type Props = {
 
 export default function ShopHeader({ opened, onToggle }: Props) {
   return (
-    <AppShell.Header>
-      <Group h="100%" px="md" justify="space-between">
-        {/* Left: burger + logo */}
+    <AppShell.Header className={styles.header}>
+      <Group h="100%" px="lg" justify="space-between">
         <Group gap="sm">
           <Burger
             opened={opened}
@@ -22,18 +24,15 @@ export default function ShopHeader({ opened, onToggle }: Props) {
             size="sm"
           />
 
-          <Anchor href="/" underline="never">
-            <Image
-              src="https://placehold.co/120x32?text=LOGO"
-              alt="logo"
-              h={32}
-              w="auto"
-              fit="contain"
-            />
+          <Anchor component={Link} href="/" underline="never">
+            <Paper py={8} px="sm" radius="xl" bg="white">
+              <Text fw={800} c="brand.7" lh={1}>
+                PORTFOLIO EC
+              </Text>
+            </Paper>
           </Anchor>
         </Group>
 
-        {/* Right: cart */}
         <CartIcon />
       </Group>
     </AppShell.Header>

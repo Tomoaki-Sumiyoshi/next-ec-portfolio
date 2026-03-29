@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCartStore } from '@/features/cart/store/cart.store';
 import QuantityControl from '@/shared/components/QuantityControl/QuantityControl';
 
+import styles from './ProductCard.module.scss';
 import { Product } from '../types/product';
 
 type Props = {
@@ -28,7 +29,7 @@ export default function ProductCard({ product }: Props) {
 
   return (
     <Card withBorder radius="md" p="md">
-      <div onClick={openModal} style={{ cursor: 'pointer' }}>
+      <div onClick={openModal} className={styles.clickable}>
         <Card.Section>
           <Image src={product.imageUrl} alt={product.name} height={180} />
         </Card.Section>

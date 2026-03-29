@@ -1,15 +1,16 @@
 'use client';
 
 import {
-  Card,
-  Stack,
-  Title,
-  Group,
   Box,
+  Card,
   Divider,
-  Text,
+  Group,
   Image,
+  Stack,
+  Text,
+  ThemeIcon,
 } from '@mantine/core';
+import { IconReceipt2 } from '@tabler/icons-react';
 import { useMemo } from 'react';
 
 import { useCartStore } from '@/features/cart/store/cart.store';
@@ -27,8 +28,8 @@ export default function CheckoutSummary({ productList }: Props) {
 
   const subtotalPrice = useMemo(() => {
     return productList.reduce(
-      (sum, r) => sum + r.price * (getQuantity(r.id) ?? 0),
-      0,
+      (sum, product) => sum + product.price * (getQuantity(product.id) ?? 0),
+      0
     );
   }, [productList, getQuantity]);
 
@@ -41,23 +42,34 @@ export default function CheckoutSummary({ productList }: Props) {
   }, [subtotalPrice, consumptionTax]);
 
   return (
-    <Card withBorder radius="md">
+    <Card>
       <Stack gap="md">
-        <Title order={4}>注文サマリ</Title>
+        <Group gap="sm">
+          <ThemeIcon variant="light" color="brand" size={40} radius="xl">
+            <IconReceipt2 size={20} />
+          </ThemeIcon>
+          <Stack gap={0}>
+            <Text fw={700}>注文サマリー</Text>
+            <Text size="sm" c="dimmed">
+              内容を確認してから注文を確定します。
+            </Text>
+          </Stack>
+        </Group>
+
         <Stack gap="sm">
           {productList.map((product) => (
-            <Card key={product.id} withBorder radius="md" padding="sm">
+            <Card key={product.id} padding="sm" radius="lg" bg="gray.0">
               <Group align="flex-start" wrap="nowrap">
                 <Image
                   src={product.imageUrl}
                   alt={product.name}
                   w={72}
                   h={72}
-                  radius="sm"
+                  radius="md"
                   fit="cover"
                 />
-                <Box>
-                  <Group justify="space-between" align="flex-start">
+                <Box flex={1}>
+                  <Group justify="space-between" align="flex-start" wrap="nowrap">
                     <Box>
                       <Text fw={600} lineClamp={1}>
                         {product.name}
@@ -66,10 +78,8 @@ export default function CheckoutSummary({ productList }: Props) {
                         数量: {getQuantity(product.id)}
                       </Text>
                     </Box>
-                    <Text fw={600}>
-                      {(
-                        product.price * getQuantity(product.id)
-                      ).toLocaleString()}
+                    <Text fw={700}>
+                      {(product.price * getQuantity(product.id)).toLocaleString()}円
                     </Text>
                   </Group>
                 </Box>
@@ -80,23 +90,23 @@ export default function CheckoutSummary({ productList }: Props) {
 
         <Divider />
 
-        <Stack gap={6}>
+        <Stack gap={8}>
           <Group justify="space-between">
             <Text c="dimmed">小計</Text>
-            <Text>{subtotalPrice.toLocaleString()}</Text>
+            <Text>{subtotalPrice.toLocaleString()}円</Text>
           </Group>
           <Group justify="space-between">
             <Text c="dimmed">送料</Text>
-            <Text>{POSTAGE.toLocaleString()}</Text>
+            <Text>{POSTAGE.toLocaleString()}円</Text>
           </Group>
           <Group justify="space-between">
-            <Text c="dimmed">消費税（目安）</Text>
-            <Text>{consumptionTax.toLocaleString()}</Text>
+            <Text c="dimmed">消費税 (10%)</Text>
+            <Text>{consumptionTax.toLocaleString()}円</Text>
           </Group>
           <Divider />
           <Group justify="space-between">
             <Text fw={700}>合計</Text>
-            <Text fw={700}>{totalPrice.toLocaleString()}</Text>
+            <Text fw={700}>{totalPrice.toLocaleString()}円</Text>
           </Group>
         </Stack>
       </Stack>

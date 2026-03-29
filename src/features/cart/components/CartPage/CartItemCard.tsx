@@ -12,6 +12,7 @@ import { IconTrash } from '@tabler/icons-react';
 import { Product } from '@/features/products/types/product';
 import QuantityControl from '@/shared/components/QuantityControl/QuantityControl';
 
+import styles from './CartItemCard.module.scss';
 import { useCartStore } from '../../store/cart.store';
 
 type Props = {
@@ -28,16 +29,7 @@ export default function CartItemCard({ product }: Props) {
         <Stack gap="sm">
           <Group align="center" justify="space-between" wrap="nowrap">
             <Group align="center" gap="md" wrap="nowrap" miw={0}>
-              <Box
-                style={{
-                  width: 72,
-                  height: 72,
-                  position: 'relative',
-                  borderRadius: 8,
-                  overflow: 'hidden',
-                  flex: '0 0 auto',
-                }}
-              >
+              <Box className={styles.imageBox}>
                 <Image
                   src={product.imageUrl}
                   alt={product.name}

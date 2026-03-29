@@ -1,21 +1,24 @@
 'use client';
 
-import { Alert, Divider, Group, Title } from '@mantine/core';
+import { Alert } from '@mantine/core';
+
+import PageHeader from '@/shared/components/PageHeader';
 
 import CheckoutCompletePageView from './CheckoutCompletePageView';
 
 export default function CheckoutCompletePage() {
   return (
     <>
-      <Group justify="space-between" align="flex-end">
-        <Title order={2}>注文が完了しました</Title>
-        <Alert title="これはポートフォリオ用のダミー決済です" color="gray">
-          実際の請求・決済は行われていません。
-        </Alert>
-      </Group>
-
-      <Divider my="md" />
-
+      <PageHeader
+        title="ご注文ありがとうございます"
+        description="購入完了後の確認画面です。注文内容は注文履歴からも参照できます。"
+        badge="Complete"
+        action={
+          <Alert color="gray" title="ポートフォリオ用の疑似決済です">
+            実際の決済処理は行わず、ブラウザストレージに注文情報を保存しています。
+          </Alert>
+        }
+      />
       <CheckoutCompletePageView />
     </>
   );

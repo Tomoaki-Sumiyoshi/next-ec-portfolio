@@ -7,6 +7,8 @@ import { OrderItem } from '@/features/order/types/order';
 import { Product } from '@/features/products/types/product';
 import { getProductById } from '@/features/products/usecases/getProductById';
 
+import styles from './OrderItemCard.module.scss';
+
 type prop = {
   checkoutItem: OrderItem;
 };
@@ -30,7 +32,7 @@ export default function OrderItemCard({ checkoutItem }: prop) {
       justify="space-between"
       align="flex-start"
     >
-      <Box style={{ minWidth: 0 }}>
+      <Box className={styles.content}>
         {product && (
           <Text fw={600} lineClamp={1}>
             {product.name}

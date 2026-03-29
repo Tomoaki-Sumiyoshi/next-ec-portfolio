@@ -2,29 +2,28 @@
 
 import {
   Button,
-  Container,
-  Divider,
   Grid,
-  Group,
-  Paper,
   ScrollArea,
   Stack,
   Text,
-  Title,
+  ThemeIcon,
 } from '@mantine/core';
+import { IconShoppingCart } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 
 import { Product } from '@/features/products/types/product';
 import { getProductListByIds } from '@/features/products/usecases/getProductListByIds';
+import Loading from '@/shared/components/Loading';
+import PageHeader from '@/shared/components/PageHeader';
 
 import CartItemCard from './CartItemCard';
+import styles from './CartPage.module.scss';
 import CartSummary from './CartSummary';
 import { useCartStore } from '../../store/cart.store';
 
 export default function CartPage() {
   const initialized = useCartStore((s) => s.initialized);
-
   const cart = useCartStore((s) => s.cart);
   const totalQuantity = useCartStore((s) => s.totalQuantity());
 
@@ -41,8 +40,8 @@ export default function CartPage() {
         setProductList([]);
         return;
       }
-      const data = await getProductListByIds(ids);
 
+      const data = await getProductListByIds(ids);
       setProductList(data);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -55,55 +54,72 @@ export default function CartPage() {
 
   const totalPrice = useMemo(() => {
     return currentProductList.reduce(
-      (sum, r) => sum + r.price * (cart[r.id] ?? 0),
-      0,
+      (sum, product) => sum + product.price * (cart[product.id] ?? 0),
+      0
     );
   }, [currentProductList, cart]);
 
   if (!initialized || !productList) {
     return (
-      <Container py="md">
-        <Title order={2}>カート</Title>
-        <Text size="sm" mt="sm">
-          読み込み中...
-        </Text>
-      </Container>
+      <>
+        <PageHeader
+          title="カート"
+          description="選択した商品と数量、合計金額を確認できます。"
+          badge="Cart"
+        />
+        <Loading />
+      </>
     );
   }
 
   if (currentProductList.length === 0) {
     return (
-      <Container py="md">
-        <Group justify="space-between" align="flex-end">
-          <Title order={2}>カート</Title>
-          <Text size="sm">点数: {totalQuantity}</Text>
-        </Group>
-
-        <Divider my="md" />
-
-        <Paper withBorder p="md" radius="md">
-          <Stack align="center">
-            <Text>カートは空です。</Text>
-            <Button mt="md" component={Link} href="/">
-              商品一覧へ
-            </Button>
+      <>
+        <PageHeader
+          title="カート"
+          description="選択した商品と数量、合計金額を確認できます。"
+          badge="Cart"
+        />
+        <Stack
+          align="center"
+          justify="center"
+          gap="md"
+          py={48}
+          bg="white"
+          bd="1px solid var(--mantine-color-gray-2)"
+          className={styles.emptyState}
+        >
+          <ThemeIcon size={56} radius="xl" variant="light" color="brand">
+            <IconShoppingCart size={26} />
+          </ThemeIcon>
+          <Stack gap={4} align="center">
+            <Text fw={700}>カートは空です</Text>
+            <Text size="sm" c="dimmed">
+              商品を追加すると、ここに購入予定の商品が表示されます。
+            </Text>
           </Stack>
-        </Paper>
-      </Container>
+          <Button component={Link} href="/">
+            商品一覧へ戻る
+          </Button>
+        </Stack>
+      </>
     );
   }
 
   return (
     <>
-      <Group justify="space-between" align="flex-end">
-        <Title order={2}>カート</Title>
-        <Text size="sm">点数: {totalQuantity}</Text>
-      </Group>
+      <PageHeader
+        title="カート"
+        description="選択した商品と数量、合計金額を確認できます。"
+        badge="Cart"
+        action={
+          <Text size="sm" c="dimmed">
+            商品数: {totalQuantity}
+          </Text>
+        }
+      />
 
-      <Divider my="md" />
-
-      <Grid align="start">
-        {/* 左：明細（横いっぱい） */}
+      <Grid align="start" gutter="lg">
         <Grid.Col span={{ base: 12, md: 8 }}>
           <ScrollArea.Autosize mah="auto">
             <Stack gap="sm">
@@ -114,8 +130,7 @@ export default function CartPage() {
           </ScrollArea.Autosize>
         </Grid.Col>
 
-        {/* 右：サマリー（固定幅寄り） */}
-        <Grid.Col span={{ base: 12, md: 4 }} pos="sticky" bottom={0}>
+        <Grid.Col span={{ base: 12, md: 4 }} pos="sticky" top={88}>
           <CartSummary totalPrice={totalPrice} />
         </Grid.Col>
       </Grid>

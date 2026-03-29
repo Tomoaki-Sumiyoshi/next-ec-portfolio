@@ -1,11 +1,10 @@
 'use client';
 
-import { ActionIcon } from '@mantine/core';
+import { ActionIcon, Indicator } from '@mantine/core';
 import { IconShoppingCart } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useEffect } from 'react';
 
-import styles from './CartIcon.module.scss';
 import { useCartStore } from '../../store/cart.store';
 
 export default function CartIcon() {
@@ -17,14 +16,14 @@ export default function CartIcon() {
     if (!initialized) init();
   }, [initialized, init]);
 
-  // 表示ロジック
   if (totalQuantity <= 0) {
     return (
       <ActionIcon
         component={Link}
         href="/cart"
-        variant="subtle"
-        size="lg"
+        variant="light"
+        color="brand"
+        size="xl"
         aria-label="cart"
       >
         <IconShoppingCart size={20} />
@@ -35,18 +34,24 @@ export default function CartIcon() {
   const label = totalQuantity > 9 ? '9+' : String(totalQuantity);
 
   return (
-    <ActionIcon
-      component={Link}
-      href="/cart"
-      variant="subtle"
-      size="lg"
-      aria-label="cart"
-      className={styles.cartActionIconOverride}
+    <Indicator
+      inline
+      label={label}
+      size={18}
+      offset={6}
+      color="red.6"
+      processing={false}
     >
-      <span className={styles.wrapper}>
+      <ActionIcon
+        component={Link}
+        href="/cart"
+        variant="light"
+        color="brand"
+        size="xl"
+        aria-label="cart"
+      >
         <IconShoppingCart size={20} />
-        <span className={styles.badge}>{label}</span>
-      </span>
-    </ActionIcon>
+      </ActionIcon>
+    </Indicator>
   );
 }

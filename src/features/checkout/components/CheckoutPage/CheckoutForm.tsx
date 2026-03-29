@@ -1,17 +1,18 @@
 'use client';
 
 import {
-  Card,
   Alert,
-  Stack,
-  Title,
-  TextInput,
-  Divider,
-  Group,
   Anchor,
   Button,
+  Card,
+  Divider,
+  Group,
+  Stack,
+  Text,
+  TextInput,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -28,7 +29,7 @@ type Props = {
 
 export default function CheckoutForm({ productList }: Props) {
   const router = useRouter();
-  const [submitting, setSubmitting] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const getQuantity = useCartStore((s) => s.getQuantity);
   const clear = useCartStore((s) => s.clear);
@@ -45,28 +46,35 @@ export default function CheckoutForm({ productList }: Props) {
       cardCvc: '',
     },
     validate: {
-      fullName: (v) =>
-        v.trim().length >= 2 ? null : 'お名前を入力してください',
-      email: (v) =>
-        /^\S+@\S+\.\S+$/.test(v)
+      fullName: (value) =>
+        value.trim().length >= 2 ? null : '氏名を入力してください',
+      email: (value) =>
+        /^\S+@\S+\.\S+$/.test(value)
           ? null
           : 'メールアドレスの形式が正しくありません',
-      postCode: (v) =>
-        /^\d{3}-?\d{4}$/.test(v) ? null : '郵便番号（例: 123-4567）',
-      addressLine1: (v) =>
-        v.trim().length >= 5 ? null : '住所を入力してください',
-      cardNumber: (v) =>
-        /^\d{12,19}$/.test(v.replace(/\s/g, ''))
+      postCode: (value) =>
+        /^\d{3}-?\d{4}$/.test(value)
           ? null
-          : 'カード番号（数字のみ）※ダミー',
-      cardExpiry: (v) =>
-        /^\d{2}\/\d{2}$/.test(v) ? null : '有効期限（MM/YY）※ダミー',
-      cardCvc: (v) => (/^\d{3,4}$/.test(v) ? null : 'CVC（3-4桁）※ダミー'),
+          : '郵便番号は 123-4567 の形式で入力してください',
+      addressLine1: (value) =>
+        value.trim().length >= 5 ? null : '住所を入力してください',
+      cardNumber: (value) =>
+        /^\d{12,19}$/.test(value.replace(/\s/g, ''))
+          ? null
+          : 'カード番号を入力してください',
+      cardExpiry: (value) =>
+        /^\d{2}\/\d{2}$/.test(value)
+          ? null
+          : '有効期限は MM/YY 形式で入力してください',
+      cardCvc: (value) =>
+        /^\d{3,4}$/.test(value) ? null : 'CVC を入力してください',
     },
   });
 
   const onSubmit = form.onSubmit(async () => {
-    if (submitting) return;
+    if (submitting) {
+      return;
+    }
 
     setSubmitting(true);
 
@@ -90,83 +98,93 @@ export default function CheckoutForm({ productList }: Props) {
       },
     };
 
-    // 外部送信なし（架空決済)
     const order = await setOrder(requestParam);
     setCheckout(order.id);
-    clear();
+    await clear();
     router.push('/checkout/complete');
   });
 
   return (
-    <>
-      <Card withBorder radius="md">
+    <Card>
+      <form onSubmit={onSubmit}>
         <Stack gap="lg">
-          <form onSubmit={onSubmit}>
-            <Stack gap="md">
-              <Title order={4}>配送先・連絡先</Title>
-              <TextInput
-                label="氏名"
-                placeholder="山田 太郎"
-                {...form.getInputProps('fullName')}
-              />
-              <TextInput
-                label="メールアドレス"
-                placeholder="taro@example.com"
-                {...form.getInputProps('email')}
-              />
-              <TextInput
-                label="郵便番号"
-                placeholder="123-4567"
-                {...form.getInputProps('postCode')}
-              />
-              <TextInput
-                label="住所"
-                placeholder="東京都○○区…"
-                {...form.getInputProps('addressLine1')}
-              />
-              <TextInput
-                label="建物名・部屋番号（任意）"
-                placeholder="○○ビル 101"
-                {...form.getInputProps('addressLine2')}
-              />
+          <Stack gap={4}>
+            <Text fw={700}>お届け先情報</Text>
+            <Text size="sm" c="dimmed">
+              注文完了後の確認画面に表示される内容です。
+            </Text>
+          </Stack>
 
-              <Divider />
+          <TextInput
+            label="氏名"
+            placeholder="山田 太郎"
+            {...form.getInputProps('fullName')}
+          />
+          <TextInput
+            label="メールアドレス"
+            placeholder="taro@example.com"
+            {...form.getInputProps('email')}
+          />
+          <TextInput
+            label="郵便番号"
+            placeholder="123-4567"
+            {...form.getInputProps('postCode')}
+          />
+          <TextInput
+            label="住所"
+            placeholder="東京都渋谷区..."
+            {...form.getInputProps('addressLine1')}
+          />
+          <TextInput
+            label="建物名・部屋番号"
+            placeholder="サンプルマンション 101"
+            {...form.getInputProps('addressLine2')}
+          />
 
-              <Title order={4}>カード情報（ダミー）</Title>
-              <TextInput
-                label="カード番号"
-                placeholder="4242 4242 4242 4242"
-                inputMode="numeric"
-                {...form.getInputProps('cardNumber')}
-              />
-              <Group grow>
-                <TextInput
-                  label="有効期限"
-                  placeholder="MM/YY"
-                  {...form.getInputProps('cardExpiry')}
-                />
-                <TextInput
-                  label="CVC"
-                  placeholder="123"
-                  inputMode="numeric"
-                  {...form.getInputProps('cardCvc')}
-                />
-              </Group>
+          <Divider />
 
-              <Alert title="注意" color="gray">
-                このページはデモです。入力情報はサーバーへ送信しません。
-              </Alert>
+          <Stack gap={4}>
+            <Text fw={700}>お支払い情報</Text>
+            <Text size="sm" c="dimmed">
+              ポートフォリオ用の疑似入力です。実際の決済は行いません。
+            </Text>
+          </Stack>
 
-              <Group justify="space-between" align="center" mt="sm">
-                <Anchor href="/cart">カートに戻る</Anchor>
-                <Button type="submit" loading={submitting}>
-                  支払う（ダミー）
-                </Button>
-              </Group>
-            </Stack>
-          </form>
+          <TextInput
+            label="カード番号"
+            placeholder="4242 4242 4242 4242"
+            inputMode="numeric"
+            {...form.getInputProps('cardNumber')}
+          />
+
+          <Group grow>
+            <TextInput
+              label="有効期限"
+              placeholder="MM/YY"
+              {...form.getInputProps('cardExpiry')}
+            />
+            <TextInput
+              label="CVC"
+              placeholder="123"
+              inputMode="numeric"
+              {...form.getInputProps('cardCvc')}
+            />
+          </Group>
+
+          <Alert title="テスト用フォーム" color="brand">
+            入力内容は学習用のデモデータとして扱われ、ブラウザ内にのみ保存されます。
+          </Alert>
+
+          <Group justify="space-between" align="center" mt="xs">
+            <Anchor component={Link} href="/cart">
+              カートへ戻る
+            </Anchor>
+            <Button type="submit" loading={submitting} color="brand">
+              注文を確定する
+            </Button>
+          </Group>
         </Stack>
-      </Card>
-    </>
+      </form>
+    </Card>
   );
 }

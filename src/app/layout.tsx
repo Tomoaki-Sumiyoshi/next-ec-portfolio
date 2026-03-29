@@ -6,6 +6,8 @@ import {
   mantineHtmlProps,
 } from '@mantine/core';
 
+import { appTheme } from '@/shared/theme/theme';
+
 export const metadata = {
   title: 'My EC Portfolio',
   description: 'EC site portfolio',
@@ -22,7 +24,7 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider>{children}</MantineProvider>
+        <MantineProvider theme={appTheme}>{children}</MantineProvider>
       </body>
     </html>
   );
