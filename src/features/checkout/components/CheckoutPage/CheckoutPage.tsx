@@ -4,7 +4,7 @@ import { Divider, Group, Title } from '@mantine/core';
 
 import CheckoutPageView from './CheckoutPageView';
 
-export default function CheckoutPageClient() {
+export default function CheckoutPage() {
   return (
     <>
       <Group justify="space-between" align="flex-end">

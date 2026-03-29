@@ -22,7 +22,7 @@ type Props = {
 const POSTAGE = 500;
 const TAX_RATE = 0.1;
 
-export default function RightSummary({ productList }: Props) {
+export default function CheckoutSummary({ productList }: Props) {
   const getQuantity = useCartStore((s) => s.getQuantity);
 
   const subtotalPrice = useMemo(() => {

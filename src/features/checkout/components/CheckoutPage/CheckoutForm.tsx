@@ -26,7 +26,7 @@ type Props = {
   productList: Product[];
 };
 
-export default function CheckoutFrom({ productList }: Props) {
+export default function CheckoutForm({ productList }: Props) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState<boolean>(false);
 
@@ -94,7 +94,7 @@ export default function CheckoutFrom({ productList }: Props) {
     const order = await setOrder(requestParam);
     setCheckout(order.id);
     clear();
-    router.push('/order');
+    router.push('/checkout/complete');
   });
 
   return (

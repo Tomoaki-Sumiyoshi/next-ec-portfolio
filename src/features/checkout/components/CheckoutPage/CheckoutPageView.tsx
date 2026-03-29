@@ -8,8 +8,8 @@ import { useCartStore } from '@/features/cart/store/cart.store';
 import { Product } from '@/features/products/types/product';
 import { getProductListByIds } from '@/features/products/usecases/getProductListByIds';
 
-import CheckoutFrom from './CheckoutForm';
-import RightSummary from './RightSummary';
+import CheckoutForm from './CheckoutForm';
+import CheckoutSummary from './CheckoutSummary';
 
 export default function CheckoutPageView() {
   const initialized = useCartStore((s) => s.initialized);
@@ -60,10 +60,10 @@ export default function CheckoutPageView() {
   return (
     <Grid align="start">
       <Grid.Col span={{ base: 12, md: 8 }}>
-        <CheckoutFrom productList={productList} />
+        <CheckoutForm productList={productList} />
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4 }}>
-        <RightSummary productList={productList} />
+        <CheckoutSummary productList={productList} />
       </Grid.Col>
     </Grid>
   );

@@ -1,5 +1,5 @@
-import { CheckoutPageClient } from '@/features/checkout/components/CheckoutPageClient';
+import { CheckoutPage as CheckoutPageContent } from '@/features/checkout/components/CheckoutPage';
 
 export default function CheckoutPage() {
-  return <CheckoutPageClient />;
+  return <CheckoutPageContent />;
 }

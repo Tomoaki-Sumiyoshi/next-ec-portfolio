@@ -5,7 +5,7 @@ type Props = {
   totalPrice: number;
 };
 
-export default function RightSummary({ totalPrice }: Props) {
+export default function CartSummary({ totalPrice }: Props) {
   return (
     <Paper withBorder p="md" radius="md">
       <Title order={4}>注文</Title>

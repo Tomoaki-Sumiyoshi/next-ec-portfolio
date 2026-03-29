@@ -10,7 +10,7 @@ import { getCheckout } from '@/features/checkout/usecase/getCheckout';
 import { Order } from '@/features/order/types/order';
 import { getOrderById } from '@/features/order/usecase/getOrderById';
 
-import CheckoutItemCard from './CheckoutItemCard';
+import OrderItemCard from './OrderItemCard';
 
 const POSTAGE = 500;
 const TAX_RATE = 0.1;
@@ -74,7 +74,7 @@ export default function CheckoutCompletePageView() {
 
             <Stack gap="xs">
               {order.itemList.map((item) => (
-                <CheckoutItemCard key={item.productId} checkoutItem={item} />
+                <OrderItemCard key={item.productId} checkoutItem={item} />
               ))}
             </Stack>
 

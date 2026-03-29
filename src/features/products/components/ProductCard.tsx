@@ -12,7 +12,7 @@ type Props = {
   product: Product;
 };
 
-export default function ProductCardItem({ product }: Props) {
+export default function ProductCard({ product }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

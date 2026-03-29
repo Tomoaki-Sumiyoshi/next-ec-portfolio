@@ -3,12 +3,12 @@
 import { Container, SimpleGrid, Text } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
-import ProductCardItem from './ProductCardItem';
+import ProductCard from './ProductCard';
 import ProductDetailModal from './ProductDetailModal';
 import { Product } from '../types/product';
 import { getProductList } from '../usecases/getProductList';
 
-export default function ProductListPageClient() {
+export default function ProductListPage() {
   const [productList, setProductList] = useState<Product[]>([]);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function ProductListPageClient() {
       <Container py="md">
         <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="md">
           {productList.map((product) => (
-            <ProductCardItem key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} />
           ))}
         </SimpleGrid>
       </Container>

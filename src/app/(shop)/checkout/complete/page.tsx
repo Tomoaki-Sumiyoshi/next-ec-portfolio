@@ -1,5 +1,5 @@
-import { CheckoutCompletePageClient } from '@/features/checkout/components/CheckoutCompletePageClient';
+import { CheckoutCompletePage as CheckoutCompletePageContent } from '@/features/checkout/components/CheckoutCompletePage';
 
 export default function CheckoutCompletePage() {
-  return <CheckoutCompletePageClient />;
+  return <CheckoutCompletePageContent />;
 }

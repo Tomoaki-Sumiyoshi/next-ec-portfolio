@@ -18,7 +18,7 @@ type Props = {
   product: Product;
 };
 
-export default function CartItem({ product }: Props) {
+export default function CartItemCard({ product }: Props) {
   const quantity = useCartStore((s) => s.getQuantity(product.id));
   const removeItem = useCartStore((s) => s.removeItem);
 

@@ -11,7 +11,7 @@ type prop = {
   checkoutItem: OrderItem;
 };
 
-export default function CheckoutItemCard({ checkoutItem }: prop) {
+export default function OrderItemCard({ checkoutItem }: prop) {
   const [product, setProduct] = useState<Product>();
 
   useEffect(() => {

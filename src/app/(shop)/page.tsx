@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
 
-import ProductListPageClient from '@/features/products/components/ProductListPageClient';
+import ProductListPage from '@/features/products/components/ProductListPage';
 
 export default async function HomePage() {
   return (
     <Suspense fallback={null}>
-      <ProductListPageClient />
+      <ProductListPage />
     </Suspense>
   );
 }

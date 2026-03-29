@@ -12,7 +12,7 @@ import {
 } from '@mantine/core';
 import { useEffect, useMemo, useState } from 'react';
 
-import CheckoutItemCard from '@/features/checkout/components/CheckoutCompletePageClient/CheckoutItemCard';
+import OrderItemCard from '@/features/checkout/components/CheckoutCompletePage/OrderItemCard';
 import { clearCheckout } from '@/features/checkout/usecase/clearCheckout';
 import { getCheckout } from '@/features/checkout/usecase/getCheckout';
 import { Order } from '@/features/order/types/order';
@@ -134,7 +134,7 @@ export default function OrderPageView() {
 
               <Stack gap="xs">
                 {order.itemList.map((item) => (
-                  <CheckoutItemCard key={item.productId} checkoutItem={item} />
+                  <OrderItemCard key={item.productId} checkoutItem={item} />
                 ))}
               </Stack>
 

@@ -4,7 +4,7 @@ import { Divider, Group, Title } from '@mantine/core';
 
 import OrderPageView from './OrderPageView';
 
-export default function OrderPageClient() {
+export default function OrderPage() {
   return (
     <>
       <Group justify="space-between" align="flex-end">

@@ -18,11 +18,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { Product } from '@/features/products/types/product';
 import { getProductListByIds } from '@/features/products/usecases/getProductListByIds';
 
-import CartItem from './CartPaperItem';
-import RightSummary from './RightSummary';
+import CartItemCard from './CartItemCard';
+import CartSummary from './CartSummary';
 import { useCartStore } from '../../store/cart.store';
 
-export default function CartPageClient() {
+export default function CartPage() {
   const initialized = useCartStore((s) => s.initialized);
 
   const cart = useCartStore((s) => s.cart);
@@ -108,7 +108,7 @@ export default function CartPageClient() {
           <ScrollArea.Autosize mah="auto">
             <Stack gap="sm">
               {currentProductList.map((product) => (
-                <CartItem key={product.id} product={product} />
+                <CartItemCard key={product.id} product={product} />
               ))}
             </Stack>
           </ScrollArea.Autosize>
@@ -116,7 +116,7 @@ export default function CartPageClient() {
 
         {/* 右：サマリー（固定幅寄り） */}
         <Grid.Col span={{ base: 12, md: 4 }} pos="sticky" bottom={0}>
-          <RightSummary totalPrice={totalPrice} />
+          <CartSummary totalPrice={totalPrice} />
         </Grid.Col>
       </Grid>
     </>

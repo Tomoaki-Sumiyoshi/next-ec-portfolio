@@ -4,7 +4,7 @@ import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 
 import ShopHeader from './ShopHeader';
-import ShopNavbar from './ShopNavber';
+import ShopNavbar from './ShopNavbar';
 
 export default function ShopShell({ children }: { children: React.ReactNode }) {
   const [opened, { toggle, close }] = useDisclosure(false);
