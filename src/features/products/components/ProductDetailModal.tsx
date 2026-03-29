@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 
 import { getErrorMessage } from '@/shared/lib/getErrorMessage';
 
-import { Product } from '../schemas/product.schema';
+import { Product } from '../types/product';
 import { getProductById } from '../usecases/getProductById';
 
 export default function ProductDetailModal() {
