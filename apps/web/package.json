@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate:api": "typed-openapi ../../openapi/openapi.yaml -o src/shared/api/generated.ts --runtime zod --default-fetcher --format"
   },
   "dependencies": {
     "@mantine/core": "^8.3.14",
@@ -30,6 +31,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "prettier": "^3.8.1",
+    "typed-openapi": "^2.2.7",
     "typescript": "^5"
   }
 }

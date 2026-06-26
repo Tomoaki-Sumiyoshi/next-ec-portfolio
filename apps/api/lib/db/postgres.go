@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"database/sql"
-	"log"
 	"os"
 	"sync"
 	"time"
@@ -20,7 +19,6 @@ var (
 func DB() (*sql.DB, error) {
 	once.Do(func() {
 		dataSourceName := os.Getenv("DATABASE_URL")
-		log.Println(dataSourceName)
 
 		db, err = sql.Open("postgres", dataSourceName)
 		if err != nil {
