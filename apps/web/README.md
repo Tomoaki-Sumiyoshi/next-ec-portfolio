@@ -145,3 +145,67 @@ npm run lint
 
 このリポジトリは自己学習のアウトプットとして継続的に改善していく想定です。  
 実装機能だけでなく、「どのように分割し、どう責務を持たせるか」を意識して更新しています。
+
+## OpenAPI 型生成
+
+API 契約は、リポジトリ直下の OpenAPI ファイルで定義します。
+
+```txt
+../../openapi/openapi.yaml
+```
+
+このファイルを元に、`typed-openapi` で TypeScript のリクエスト/レスポンス型、Zod schema、型付き API client を生成します。
+
+### 生成ファイル
+
+```txt
+src/shared/api/generated.ts
+```
+
+生成ファイルは直接編集しません。`../../openapi/openapi.yaml` を更新してから、生成コマンドを再実行してください。
+
+手書きの client wrapper はここに置きます。
+
+```txt
+src/shared/api/api.client.ts
+```
+
+アプリケーションコードからは、生成された client 設定を直接 import せず、この wrapper を利用します。
+
+### 型を生成する
+
+`apps/web` から実行します。
+
+```bash
+npm run generate:api
+```
+
+script は `package.json` に定義されています。
+
+```json
+"generate:api": "typed-openapi ../../openapi/openapi.yaml -o src/shared/api/generated.ts --runtime zod --default-fetcher --format"
+```
+
+### API Base URL
+
+API の origin は環境変数で管理します。
+
+```env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:3000
+```
+
+本番環境では、`NEXT_PUBLIC_API_BASE_URL` にデプロイ済み API の origin を設定します。
+例:
+
+```env
+NEXT_PUBLIC_API_BASE_URL=https://your-api.vercel.app
+```
+
+この値は `src/shared/api/api.client.ts` から参照されます。
+
+### 推奨ワークフロー
+
+1. `../../openapi/openapi.yaml` を更新する。
+2. `apps/web` から `npm run generate:api` を実行する。
+3. `@/shared/api/api.client` から `api` を import して利用する。
+4. コミット前に `npm run lint` を実行する。
