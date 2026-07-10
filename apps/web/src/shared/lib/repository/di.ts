@@ -4,7 +4,7 @@ import { CheckoutRepository } from '@/features/checkout/repositories/CheckoutRep
 import { SessionStorageCheckoutRepository } from '@/features/checkout/repositories/SessionStorageCheckoutRepository';
 import { LocalStorageOrderRepository } from '@/features/order/repositories/LocalStorageOrderRepository';
 import { OrderRepository } from '@/features/order/repositories/OrderRepository';
-import { JsonProductRepository } from '@/features/products/repositories/JsonProductRepository';
+import { ApiProductRepository } from '@/features/products/repositories/ApiProductRepository';
 import { ProductRepository } from '@/features/products/repositories/ProductRepository';
 
 let productRepo: ProductRepository | null = null;
@@ -13,7 +13,7 @@ let checkoutRepo: CheckoutRepository | null = null;
 let orderRepo: OrderRepository | null = null;
 
 export function getProductRepository(): ProductRepository {
-  if (!productRepo) productRepo = new JsonProductRepository();
+  if (!productRepo) productRepo = new ApiProductRepository();
   return productRepo;
 }
 

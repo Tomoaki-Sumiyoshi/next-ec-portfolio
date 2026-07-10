@@ -71,3 +71,30 @@ import 例:
 ```go
 import "github.com/t-sumiyoshi/next-ec-portfolio/apps/api/lib/openapi"
 ```
+
+## `vercel dev` のポート番号を変更して起動する
+
+`vercel dev` はデフォルト以外のポート番号を指定して起動できます。
+API のローカル起動ポートを変更したい場合は、`apps/api` から `--listen` オプションを付けて実行します。
+
+```bash
+vercel dev --listen 5005
+```
+
+短縮形の `-l` も利用できます。
+
+```bash
+vercel dev -l 5005
+```
+
+上記の例では、API は次の URL で確認できます。
+
+```txt
+http://localhost:5005/api/products
+```
+
+リポジトリルートから起動する場合は、`--cwd` で `apps/api` を指定します。
+
+```bash
+vercel dev --cwd apps/api --listen 5005
+```
