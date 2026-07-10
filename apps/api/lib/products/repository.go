@@ -2,8 +2,6 @@ package products
 
 import (
 	"context"
-	"database/sql"
-	"errors"
 	"time"
 
 	"github.com/lib/pq"
@@ -53,31 +51,4 @@ func List(ctx context.Context, ids []string) ([]openapi.Product, error) {
 	}
 
 	return result, nil
-}
-
-func GetByID(ctx context.Context, id string) (openapi.Product, error) {
-	conn, err := db.DB()
-	if err != nil {
-		return openapi.Product{}, err
-	}
-
-	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
-	defer cancel()
-
-	var p openapi.Product
-	err = conn.QueryRowContext(ctx, `
-		SELECT id, name, price, image_url, description
-		FROM products
-		WHERE id = $1
-	`, id).Scan(&p.Id, &p.Name, &p.Price, &p.ImageUrl, &p.Description)
-
-	if errors.Is(err, sql.ErrNoRows) {
-		return openapi.Product{}, sql.ErrNoRows
-	}
-
-	if err != nil {
-		return openapi.Product{}, err
-	}
-
-	return p, nil
 }

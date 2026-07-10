@@ -10,8 +10,12 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const search = request.nextUrl.search;
-  const upstreamUrl = `${apiBaseUrl.replace(/\/$/, '')}/api/products${search}`;
+  const upstreamUrl = new URL('/api/products', apiBaseUrl);
+  const ids = request.nextUrl.searchParams.getAll('ids');
+
+  if (ids.length > 0) {
+    upstreamUrl.searchParams.set('ids', ids.join(','));
+  }
 
   const response = await fetch(upstreamUrl, {
     method: 'GET',

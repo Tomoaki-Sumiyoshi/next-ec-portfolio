@@ -35,35 +35,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Product'
-  /api/products/{productId}:
-    get:
-      operationId: getProductById
-      summary: Get product by ID
-      tags:
-        - Products
-      parameters:
-        - name: productId
-          in: path
-          required: true
-          description: Product ID.
-          schema:
-            type: string
-            minLength: 1
-          example: p001
-      responses:
-        '200':
-          description: Product.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Product'
-        '404':
-          description: Product was not found.
-          content:
-            text/plain:
-              schema:
-                type: string
-              example: product not found
   /api/health:
     get:
       operationId: getHealth

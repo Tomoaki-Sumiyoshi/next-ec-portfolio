@@ -1,9 +1,3 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [
-    {
-      "source": "/api/products/:productId",
-      "destination": "/api/product?productId=:productId"
-    }
-  ]
+  "$schema": "https://openapi.vercel.sh/vercel.json"
 }
