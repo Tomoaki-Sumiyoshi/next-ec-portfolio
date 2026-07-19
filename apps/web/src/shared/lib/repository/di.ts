@@ -2,7 +2,7 @@ import type { CartRepository } from '@/features/cart/repositories/CartRepository
 import { LocalStorageCartRepository } from '@/features/cart/repositories/LocalStorageCartRepository';
 import { CheckoutRepository } from '@/features/checkout/repositories/CheckoutRepository';
 import { SessionStorageCheckoutRepository } from '@/features/checkout/repositories/SessionStorageCheckoutRepository';
-import { LocalStorageOrderRepository } from '@/features/order/repositories/LocalStorageOrderRepository';
+import { ApiOrderRepository } from '@/features/order/repositories/ApiOrderRepository';
 import { OrderRepository } from '@/features/order/repositories/OrderRepository';
 import { ApiProductRepository } from '@/features/products/repositories/ApiProductRepository';
 import { ProductRepository } from '@/features/products/repositories/ProductRepository';
@@ -31,7 +31,7 @@ export function getCheckoutRepository(): CheckoutRepository {
 }
 
 export function getOrderRepository(): OrderRepository {
-  if (!orderRepo) orderRepo = new LocalStorageOrderRepository();
+  if (!orderRepo) orderRepo = new ApiOrderRepository();
   return orderRepo;
 }
 
