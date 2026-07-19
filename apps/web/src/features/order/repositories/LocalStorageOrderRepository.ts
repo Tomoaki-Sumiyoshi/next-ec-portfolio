@@ -36,17 +36,21 @@ function removeStorage() {
 }
 
 export class LocalStorageOrderRepository implements OrderRepository {
-  async list(): Promise<Order[]> {
-    return readStorage();
+  async list(userId: string): Promise<Order[]> {
+    return readStorage().filter((order) => order.userId === userId);
   }
 
   async getById(id: string): Promise<Order | null> {
     return readStorage().find((order) => order.id === id) ?? null;
   }
 
-  async set(orderRequest: OrderRequestParam): Promise<Order> {
+  async set(
+    orderRequest: OrderRequestParam,
+    userId: string
+  ): Promise<Order> {
     const createdOrder: Order = {
       id: v4(),
+      userId,
       createdAt: new Date().toISOString(),
       ...OrderRequestParamSchema.parse(orderRequest),
     };

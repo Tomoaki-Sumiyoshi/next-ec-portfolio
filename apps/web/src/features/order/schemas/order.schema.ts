@@ -34,6 +34,7 @@ export const OrderRequestParamSchema = z.object({
 export const OrderSchema = z
   .object({
     id: z.uuidv4(),
+    userId: z.uuidv4(),
     createdAt: z.iso.datetime(),
   })
   .and(OrderRequestParamSchema);

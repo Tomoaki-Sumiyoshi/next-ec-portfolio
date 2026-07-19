@@ -6,11 +6,14 @@ import { LocalStorageOrderRepository } from '@/features/order/repositories/Local
 import { OrderRepository } from '@/features/order/repositories/OrderRepository';
 import { ApiProductRepository } from '@/features/products/repositories/ApiProductRepository';
 import { ProductRepository } from '@/features/products/repositories/ProductRepository';
+import { LocalStorageUserRepository } from '@/features/user/repositories/LocalStorageUserRepository';
+import type { UserRepository } from '@/features/user/repositories/UserRepository';
 
 let productRepo: ProductRepository | null = null;
 let cartRepo: CartRepository | null = null;
 let checkoutRepo: CheckoutRepository | null = null;
 let orderRepo: OrderRepository | null = null;
+let userRepo: UserRepository | null = null;
 
 export function getProductRepository(): ProductRepository {
   if (!productRepo) productRepo = new ApiProductRepository();
@@ -30,4 +33,9 @@ export function getCheckoutRepository(): CheckoutRepository {
 export function getOrderRepository(): OrderRepository {
   if (!orderRepo) orderRepo = new LocalStorageOrderRepository();
   return orderRepo;
+}
+
+export function getUserRepository(): UserRepository {
+  if (!userRepo) userRepo = new LocalStorageUserRepository();
+  return userRepo;
 }

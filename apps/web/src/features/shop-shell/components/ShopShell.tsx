@@ -3,6 +3,7 @@
 import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 
+import UserInitializer from '@/features/user/components/UserInitializer';
 import {
   APP_HEADER_HEIGHT,
   APP_NAVBAR_WIDTH,
@@ -16,20 +17,24 @@ export default function ShopShell({ children }: { children: React.ReactNode }) {
   const [opened, { toggle, close }] = useDisclosure(false);
 
   return (
-    <AppShell
-      header={{ height: APP_HEADER_HEIGHT }}
-      navbar={{
-        width: APP_NAVBAR_WIDTH,
-        breakpoint: 'md',
-        collapsed: { mobile: !opened },
-      }}
-      padding={{ base: 'sm', sm: 'md', lg: 'lg' }}
-    >
-      <ShopHeader opened={opened} onToggle={toggle} />
+    <>
+      <UserInitializer />
 
-      <ShopNavbar onNavigate={close} />
+      <AppShell
+        header={{ height: APP_HEADER_HEIGHT }}
+        navbar={{
+          width: APP_NAVBAR_WIDTH,
+          breakpoint: 'md',
+          collapsed: { mobile: !opened },
+        }}
+        padding={{ base: 'sm', sm: 'md', lg: 'lg' }}
+      >
+        <ShopHeader opened={opened} onToggle={toggle} />
 
-      <AppShell.Main className={styles.main}>{children}</AppShell.Main>
-    </AppShell>
+        <ShopNavbar onNavigate={close} />
+
+        <AppShell.Main className={styles.main}>{children}</AppShell.Main>
+      </AppShell>
+    </>
   );
 }
