@@ -72,6 +72,29 @@ import 例:
 import "github.com/t-sumiyoshi/next-ec-portfolio/apps/api/lib/openapi"
 ```
 
+## 注文データの定期削除
+
+Vercel Cron Jobsから毎日日本時間0時（UTC 15:00）に、作成から24時間を超えた
+`orders`を物理削除します。関連する`order_items`は外部キーの
+`ON DELETE CASCADE`によって同時に削除されます。
+
+```txt
+GET /api/cron/orders-cleanup
+```
+
+Cronの呼び出しは`CRON_SECRET`で保護します。VercelプロジェクトのEnvironment
+Variablesに、16文字以上のランダムな値を設定してください。
+
+```txt
+CRON_SECRET=ランダムな文字列
+```
+
+ローカルで確認する場合も、同じ値をAuthorizationヘッダーに指定します。
+
+```bash
+curl -H "Authorization: Bearer $CRON_SECRET" http://localhost:5005/api/cron/orders-cleanup
+```
+
 ## `vercel dev` のポート番号を変更して起動する
 
 `vercel dev` はデフォルト以外のポート番号を指定して起動できます。

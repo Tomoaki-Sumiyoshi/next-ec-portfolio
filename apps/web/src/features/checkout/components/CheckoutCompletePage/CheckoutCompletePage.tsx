@@ -11,7 +11,7 @@ export default function CheckoutCompletePage() {
     <>
       <PageHeader
         title="ご注文ありがとうございます"
-        description="購入完了後の確認画面です。注文内容は注文履歴からも参照できます。"
+        description="購入完了後の確認画面です。注文内容は注文履歴からも参照できます。注文情報は購入完了から24時間以上経過すると自動的に削除されます。"
         badge="Complete"
         action={
           <Alert color="gray" title="ポートフォリオ用の疑似決済です">
