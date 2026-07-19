@@ -2,7 +2,11 @@ module github.com/t-sumiyoshi/next-ec-portfolio/apps/api
 
 go 1.26.2
 
-require github.com/lib/pq v1.12.3
+require (
+	github.com/google/uuid v1.6.0
+	github.com/lib/pq v1.12.3
+	github.com/oapi-codegen/runtime v1.6.0
+)
 
 require (
 	github.com/dprotaso/go-yit v0.0.0-20220510233725-9ba8df137936 // indirect
