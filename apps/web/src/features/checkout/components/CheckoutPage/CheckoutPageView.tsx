@@ -21,8 +21,10 @@ export default function CheckoutPageView() {
 
   const [productList, setProductList] = useState<Product[] | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const loadCheckoutProductList = useCallback(async () => {
+    setIsLoading(true);
     try {
       setErrorMessage('');
       const fetchedProducts = await getCartProductList(cart);
@@ -35,6 +37,8 @@ export default function CheckoutPageView() {
         )
       );
       setProductList([]);
+    } finally {
+      setIsLoading(false);
     }
   }, [cart]);
 
@@ -48,7 +52,7 @@ export default function CheckoutPageView() {
     });
   }, [initialized, loadCheckoutProductList]);
 
-  if (!initialized || productList === null) {
+  if (!initialized || isLoading || productList === null) {
     return <Loading />;
   }
 

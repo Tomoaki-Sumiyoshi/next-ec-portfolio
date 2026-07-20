@@ -25,8 +25,10 @@ export default function CartPage() {
 
   const [productList, setProductList] = useState<Product[] | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const loadCartProductList = useCallback(async () => {
+    setIsLoading(true);
     try {
       setErrorMessage('');
       const fetchedProducts = await getCartProductList(cart);
@@ -39,6 +41,8 @@ export default function CartPage() {
         )
       );
       setProductList([]);
+    } finally {
+      setIsLoading(false);
     }
   }, [cart]);
 
@@ -63,7 +67,7 @@ export default function CartPage() {
     );
   }, [currentProductList, cart]);
 
-  if (!initialized || productList === null) {
+  if (!initialized || isLoading || productList === null) {
     return (
       <>
         <PageHeader

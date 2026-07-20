@@ -19,15 +19,19 @@ export default function ProductDetailModal() {
 
   const [product, setProduct] = useState<Product | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
       if (!productId) {
         setProduct(null);
         setErrorMessage('');
+        setIsLoading(false);
         return;
       }
 
+      setIsLoading(true);
+      setProduct(null);
       try {
         setErrorMessage('');
         const fetchedProduct = await getProductById(productId);
@@ -40,6 +44,8 @@ export default function ProductDetailModal() {
             '商品の詳細情報を取得できませんでした。時間をおいて再試行してください。'
           )
         );
+      } finally {
+        setIsLoading(false);
       }
     })();
   }, [productId]);
@@ -56,12 +62,16 @@ export default function ProductDetailModal() {
 
   return (
     <Modal opened={isOpened} onClose={closeModal} title="商品詳細" centered>
-      {errorMessage ? (
+      {isLoading ? (
+        <Text size="sm">商品情報を読み込み中です。</Text>
+      ) : errorMessage ? (
         <Alert title="商品情報を読み込めませんでした" color="red">
           {errorMessage}
         </Alert>
       ) : !product ? (
-        <Text size="sm">商品情報を読み込み中です。</Text>
+        <Alert title="商品情報を読み込めませんでした" color="red">
+          商品が見つかりませんでした。
+        </Alert>
       ) : (
         <Stack gap="sm">
           <Image src={product.imageUrl} alt={product.name} radius="md" />

@@ -121,8 +121,9 @@ export default function CheckoutForm({ productList }: Props) {
 
           <CheckoutPaymentSection form={form} />
 
-          <Alert title="デモフォーム" color="brand">
-            入力内容は学習用のダミーデータとして扱われ、ブラウザ内にのみ保存されます。
+          <Alert title="カード情報について" color="yellow">
+            このフォームに入力されたカード情報は、決済・保存・送信されません。
+            デモ用の入力欄のため、実際のカード情報は使用しないでください。
           </Alert>
 
           {submitErrorMessage && (
