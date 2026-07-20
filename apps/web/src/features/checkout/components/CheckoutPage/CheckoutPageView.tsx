@@ -22,6 +22,7 @@ export default function CheckoutPageView() {
   const [productList, setProductList] = useState<Product[] | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isCompletingOrder, setIsCompletingOrder] = useState(false);
 
   const loadCheckoutProductList = useCallback(async () => {
     setIsLoading(true);
@@ -52,7 +53,12 @@ export default function CheckoutPageView() {
     });
   }, [initialized, loadCheckoutProductList]);
 
-  if (!initialized || isLoading || productList === null) {
+  if (
+    isCompletingOrder ||
+    !initialized ||
+    isLoading ||
+    productList === null
+  ) {
     return <Loading />;
   }
 
@@ -72,7 +78,10 @@ export default function CheckoutPageView() {
   return (
     <Grid align="start" gutter={{ base: 'md', md: 'lg' }}>
       <Grid.Col span={{ base: 12, md: 8 }}>
-        <CheckoutForm productList={productList} />
+        <CheckoutForm
+          productList={productList}
+          onCompletingChange={setIsCompletingOrder}
+        />
       </Grid.Col>
       <Grid.Col span={{ base: 12, md: 4 }} className={styles.summaryColumn}>
         <CheckoutSummary productList={productList} />

@@ -23,9 +23,13 @@ import { setCheckout } from '../../usecase/setCheckout';
 
 type Props = {
   productList: Product[];
+  onCompletingChange: (isCompleting: boolean) => void;
 };
 
-export default function CheckoutForm({ productList }: Props) {
+export default function CheckoutForm({
+  productList,
+  onCompletingChange,
+}: Props) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [submitErrorMessage, setSubmitErrorMessage] = useState('');
@@ -102,9 +106,12 @@ export default function CheckoutForm({ productList }: Props) {
 
       const createdOrder = await setOrder(orderRequest);
       await setCheckout(createdOrder.id);
+
+      onCompletingChange(true);
       await clearCart();
       router.push(ROUTES.checkoutComplete);
     } catch (error) {
+      onCompletingChange(false);
       setSubmitErrorMessage(
         getErrorMessage(
           error,
