@@ -1,105 +1,56 @@
-# DB 運用管理手順
+# データベース
 
-このディレクトリでは、ローカル開発用 PostgreSQL の初期化 SQL と、将来的なスキーマ変更用のマイグレーション SQL を管理します。
+ローカル開発用PostgreSQLの初期化SQLと、スキーマ変更履歴を管理します。APIからの接続方法は [Go API README](../../apps/api/README.md) を参照してください。
 
-## ディレクトリ構成
+## 構成
 
-```txt
+```text
 infra/db/
-  init/
-    001_init.sql
-  migrations/
+├─ init/
+│  └─ 001_init.sql              # 空のDocker volumeを初期化
+└─ migrations/
+   ├─ 001_init.sql              # productsテーブルと初期商品
+   └─ 002_create_orders.sql     # orders、order_itemsテーブル
 ```
 
-`init` は Docker PostgreSQL の初回起動時にだけ実行される SQL を置く場所です。現在は `products` テーブルの作成と初期商品データの投入を行います。
+管理する主なテーブルは次のとおりです。
 
-`migrations` は DB スキーマの変更履歴を置く場所です。今後、注文テーブルの追加やカラム追加などを行う場合は、番号付き SQL として追加します。
+| テーブル | 内容 |
+| --- | --- |
+| `products` | 商品情報。15件の学習用初期データを含む |
+| `orders` | 注文者、配送先、作成日時 |
+| `order_items` | 注文明細。注文削除時に連動して削除 |
 
-## ローカル DB の起動
+## ローカルDBの起動
 
-リポジトリルートから実行します。
+リポジトリルートで実行します。
 
 ```bash
-docker compose up
+docker compose up -d
 ```
 
-`docker-compose.yml` では、`infra/db/init` を PostgreSQL コンテナの `/docker-entrypoint-initdb.d` にマウントしています。
+接続情報は `docker-compose.yml` に定義されています。
 
-```yaml
-volumes:
-  - postgres_data:/var/lib/postgresql/data
-  - ./infra/db/init:/docker-entrypoint-initdb.d:ro
-```
-
-PostgreSQL 公式イメージは、データディレクトリが空の初回起動時に `/docker-entrypoint-initdb.d` 配下の `.sql` をファイル名順に実行します。
-
-## 初期化 SQL
-
-初期化 SQL は次のファイルで管理します。
-
-```txt
-infra/db/init/001_init.sql
-```
-
-このファイルの役割は、空のローカル DB をアプリが動作できる最低限の状態にすることです。
-
-現在の内容は以下です。
-
-```txt
-products テーブルの作成
-products.json 相当の初期商品データ投入
-```
-
-`001_init.sql` は初回起動時だけ実行されます。既に `postgres_data` volume が存在する状態で SQL を変更しても、自動では再実行されません。
-
-## ローカル DB を作り直す
-
-初期化 SQL を変更して最初から反映したい場合は、ローカル DB の volume を削除してから起動します。
-
-```bash
-docker compose down -v
-docker compose up
-```
-
-`docker compose down -v` はローカル DB のデータを削除します。残したいデータがある場合は実行しないでください。
-
-## マイグレーション SQL
-
-将来的なスキーマ変更は `migrations` に追加します。
-
-```txt
-infra/db/migrations/
-  001_create_products.sql
-  002_create_orders.sql
-  003_add_product_stock.sql
-```
-
-マイグレーション SQL は、ローカル DB と本番 DB の状態を同じ順番で更新するための履歴です。一度適用した SQL は基本的に編集せず、変更が必要な場合は新しい番号の SQL を追加します。
-
-例:
-
-```txt
-良い:
-004_add_order_status.sql
-
-避ける:
-001_create_products.sql を後から書き換える
-```
-
-現時点ではマイグレーション実行ツールは未導入です。注文機能や本番 Neon 反映が必要になった段階で、`goose`、`atlas`、`tern` などの導入を検討します。
-
-## ローカル DB と本番 DB
-
-ローカル開発では Docker PostgreSQL を使います。
-
-```txt
+```text
 postgres://app:password@localhost:5432/app_local?sslmode=disable
 ```
 
-本番では Neon PostgreSQL を使います。本番の接続情報は Vercel の Environment Variables に設定し、リポジトリにはコミットしません。
+`init/001_init.sql` は `postgres_data` volumeが空の初回起動時だけ自動実行されます。既存volumeに対してSQLを変更しても自動では再実行されません。
 
-```txt
-DATABASE_URL=Neon の接続文字列
+## 初期化とマイグレーションの扱い
+
+- `init/001_init.sql`: 新規ローカル環境を現在のスキーマへ一度で初期化するためのSQLです。
+- `migrations/*.sql`: スキーマを変更順に適用するための履歴です。一度適用したファイルは書き換えず、新しい連番ファイルを追加します。
+
+現時点ではマイグレーション実行ツールを導入していません。本番DBなど既存環境への適用は、対象環境と適用済み番号を確認したうえで番号順に行ってください。
+
+## ローカルDBの作り直し
+
+次の操作はDocker volume内のローカルデータをすべて削除します。残したいデータがないことを確認してから実行してください。
+
+```bash
+docker compose down -v
+docker compose up -d
 ```
 
-ローカルと本番で同じ `DATABASE_URL` という環境変数名を使い、値だけを環境ごとに切り替えます。
+本番環境ではNeon PostgreSQLを想定し、接続文字列は `DATABASE_URL` としてデプロイ環境へ設定します。

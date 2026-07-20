@@ -1,123 +1,80 @@
-# API
+# Go API
 
-Next EC Portfolio の Go API です。
+商品と注文をPostgreSQLへ永続化する、Go製のHTTP APIです。Vercel Functionsのファイルベースルーティングに合わせ、各 `api/**/index.go` が `Handler` を公開します。
 
-## OpenAPI 型生成
+プロジェクト全体の起動手順は [ルートの README](../../README.md) を参照してください。
 
-API 契約は、リポジトリ直下の OpenAPI ファイルで定義します。
+## エンドポイント
 
-```txt
-../../openapi/openapi.yaml
+| メソッド | パス | 用途 |
+| --- | --- | --- |
+| `GET` | `/api/products` | 商品一覧取得。`ids` でカンマ区切りの絞り込みが可能 |
+| `GET` | `/api/orders` | `userId` または `id` のどちらか一方で注文を検索 |
+| `POST` | `/api/orders` | 注文作成 |
+| `GET` | `/api/health` | APIの稼働確認 |
+| `GET` | `/api/health/db` | DB接続確認 |
+| `GET` | `/api/cron/orders-cleanup` | 24時間より古い注文を削除 |
+
+リクエストとレスポンスの正確な定義は [OpenAPI README](../../openapi/README.md) と `openapi/openapi.yaml` を参照してください。
+
+## ディレクトリ構成
+
+```text
+apps/api/
+├─ api/                 # Vercel FunctionsのHTTPハンドラー
+│  ├─ products/
+│  ├─ orders/
+│  ├─ health/
+│  └─ cron/orders-cleanup/
+├─ lib/
+│  ├─ db/               # PostgreSQL接続
+│  ├─ products/         # 商品のDB操作
+│  ├─ orders/           # 注文のDB操作と削除処理
+│  └─ openapi/          # Go型の生成設定と生成物
+└─ vercel.json          # Cron Jobs設定
 ```
 
-このファイルを元に、`oapi-codegen` で Go のリクエスト/レスポンス用モデル型を生成します。
+## 環境変数
 
-### 生成ファイル
+`.env.example` を `.env` にコピーして利用します。
 
-```txt
-lib/openapi/generated.go
-```
+| 変数 | 用途 |
+| --- | --- |
+| `DATABASE_URL` | PostgreSQL接続文字列 |
+| `CORS_ALLOWED_ORIGINS` | CORS制御用の予約値（現時点の実装では未使用） |
+| `APP_ENV` | 実行環境判定用の予約値（現時点の実装では未使用） |
+| `CRON_SECRET` | 注文削除エンドポイントのBearer認証キー |
 
-生成ファイルは直接編集しません。`../../openapi/openapi.yaml` を更新してから、生成コマンドを再実行してください。
+本番の接続情報や秘密値はVercelのEnvironment Variablesへ設定し、リポジトリへコミットしません。
 
-### 生成設定
+## ローカル起動
 
-```txt
-lib/openapi/oapi-codegen.yaml
-lib/openapi/generate.go
-```
-
-現在の設定では Go のモデル型のみを生成します。これは、各エンドポイントを
-`Handler(w http.ResponseWriter, r *http.Request)` として実装する Vercel の
-file-based function 構成に合わせた方針です。
-
-### 型を生成する
-
-`apps/api` から実行します。
+ルートでDBを起動した後、`apps/api` でVercel CLIを実行します。
 
 ```bash
+vercel dev --listen 8000
+```
+
+起動後は、たとえば <http://localhost:8000/api/health/db> でDB接続を確認できます。
+
+## 開発・検証コマンド
+
+`apps/api` で実行します。
+
+```bash
+go test ./...
+go build ./...
 go generate ./lib/openapi
 ```
 
-このコマンドにより、`lib/openapi/generate.go` の directive が実行されます。
-
-```go
-//go:generate go tool oapi-codegen -config oapi-codegen.yaml ../../../../openapi/openapi.yaml
-```
-
-### ジェネレーターを追加または更新する
-
-`oapi-codegen` が Go tool として未登録の場合は、`apps/api` から実行します。
-
-```bash
-go get -tool github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest
-```
-
-その後、再度生成します。
-
-```bash
-go generate ./lib/openapi
-```
-
-### 推奨ワークフロー
-
-1. `../../openapi/openapi.yaml` を更新する。
-2. `apps/api` から `go generate ./lib/openapi` を実行する。
-3. `github.com/t-sumiyoshi/next-ec-portfolio/apps/api/lib/openapi` から生成型を利用する。
-4. コミット前にテストやビルドチェックを実行する。
-
-import 例:
-
-```go
-import "github.com/t-sumiyoshi/next-ec-portfolio/apps/api/lib/openapi"
-```
+OpenAPIから生成される `lib/openapi/generated.go` は直接編集しません。生成設定は `lib/openapi/oapi-codegen.yaml`、生成指示は `lib/openapi/generate.go` にあります。
 
 ## 注文データの定期削除
 
-Vercel Cron Jobsから毎日日本時間0時（UTC 15:00）に、作成から24時間を超えた
-`orders`を物理削除します。関連する`order_items`は外部キーの
-`ON DELETE CASCADE`によって同時に削除されます。
+Vercel Cron Jobsが毎日 `0 15 * * *`（UTC、JSTでは午前0時）に削除エンドポイントを呼び、作成から24時間を超えた注文を削除します。関連する `order_items` も外部キーの `ON DELETE CASCADE` で削除されます。
 
-```txt
-GET /api/cron/orders-cleanup
-```
-
-Cronの呼び出しは`CRON_SECRET`で保護します。VercelプロジェクトのEnvironment
-Variablesに、16文字以上のランダムな値を設定してください。
-
-```txt
-CRON_SECRET=ランダムな文字列
-```
-
-ローカルで確認する場合も、同じ値をAuthorizationヘッダーに指定します。
+ローカルで試す場合は、APIに設定した値と同じ `CRON_SECRET` をBearerトークンとして送ります。
 
 ```bash
-curl -H "Authorization: Bearer $CRON_SECRET" http://localhost:5005/api/cron/orders-cleanup
-```
-
-## `vercel dev` のポート番号を変更して起動する
-
-`vercel dev` はデフォルト以外のポート番号を指定して起動できます。
-API のローカル起動ポートを変更したい場合は、`apps/api` から `--listen` オプションを付けて実行します。
-
-```bash
-vercel dev --listen 5005
-```
-
-短縮形の `-l` も利用できます。
-
-```bash
-vercel dev -l 5005
-```
-
-上記の例では、API は次の URL で確認できます。
-
-```txt
-http://localhost:5005/api/products
-```
-
-リポジトリルートから起動する場合は、`--cwd` で `apps/api` を指定します。
-
-```bash
-vercel dev --cwd apps/api --listen 5005
+curl -H "Authorization: Bearer <CRON_SECRET>" http://localhost:8000/api/cron/orders-cleanup
 ```
