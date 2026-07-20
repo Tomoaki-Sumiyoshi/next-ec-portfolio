@@ -14,6 +14,10 @@ import { getErrorMessage } from '@/shared/lib/getErrorMessage';
 
 import CheckoutCustomerSection from './CheckoutCustomerSection';
 import CheckoutFormActions from './CheckoutFormActions';
+import {
+  isValidCardExpiry,
+  isValidDemoCardNumber,
+} from './checkoutPayment.utils';
 import CheckoutPaymentSection from './CheckoutPaymentSection';
 import { setCheckout } from '../../usecase/setCheckout';
 
@@ -30,6 +34,7 @@ export default function CheckoutForm({ productList }: Props) {
   const clearCart = useCartStore((cartState) => cartState.clear);
 
   const form = useForm({
+    validateInputOnBlur: true,
     initialValues: {
       fullName: '',
       email: '',
@@ -54,11 +59,11 @@ export default function CheckoutForm({ productList }: Props) {
       addressLine1: (value) =>
         value.trim().length >= 5 ? null : '住所を入力してください',
       cardNumber: (value) =>
-        /^\d{12,19}$/.test(value.replace(/\s/g, ''))
+        isValidDemoCardNumber(value)
           ? null
           : 'カード番号を入力してください',
       cardExpiry: (value) =>
-        /^\d{2}\/\d{2}$/.test(value)
+        isValidCardExpiry(value)
           ? null
           : '有効期限は MM/YY 形式で入力してください',
       cardCvc: (value) =>
@@ -85,13 +90,13 @@ export default function CheckoutForm({ productList }: Props) {
           marketPrice: product.price,
         })),
         customer: {
-          fullName,
-          email,
+          fullName: fullName.trim(),
+          email: email.trim().toLowerCase(),
         },
         shippingAddress: {
           postCode,
-          addressLine1,
-          addressLine2,
+          addressLine1: addressLine1.trim(),
+          addressLine2: addressLine2.trim() || undefined,
         },
       };
 
